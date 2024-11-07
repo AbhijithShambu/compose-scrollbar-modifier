@@ -1,15 +1,67 @@
-*.iml
-.gradle
-/local.properties
-/.idea
-.DS_Store
-build/
+# Kotlin/Java build files
+/build/
 /captures
+/out/
+/target/
+/.kotlin/
+
+# Gradle
+.gradle/
+
+# Local configuration file (for personal machine specific settings)
+local.properties
+
+# Ignore generated JAR and APK files
+*.jar
+*.war
+*.ear
+*.apk
+*.ap_
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# macOS hidden files
+.DS_Store
+
+# Windows hidden files
+Thumbs.db
+
+# Kotlin Native
+**/cinterop/
+**/bin/
+**/build/
+**/kotlin/native/cache/
+**/kotlin/native/lib/
 .externalNativeBuild
 .cxx
-sample/iosApp/Podfile.lock
-sample/iosApp/Pods/*
+
+# iOS specific
+**/iosApp/Pods/
+sample/iosApp/build/
+sample/iosApp/DerivedData/
+xcuserdata
+
 sample/iosApp/iosApp.xcworkspace/*
 sample/iosApp/iosApp.xcodeproj/*
 !sample/iosApp/iosApp.xcodeproj/project.pbxproj
-shared/shared.podspec
+composeApp/composeApp.podspec
+
+# Android specific
+**/android/.gradle
+**/android/captures/
+**/android/build/
+**/android/.idea
+# Android Profiling
+*.hprof
+
+# Common editor files
+.vscode/
+*.swp
+*.swo
+
+# Miscellaneous
+*.log

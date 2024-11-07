@@ -194,31 +194,31 @@ belonging to the project:
 
 Your Compose Multiplatform project includes 4 modules:
 
-### `shared`
+### `composeApp`
 
 This is a Kotlin module that contains the logic common for desktop, Android, and iOS applications, that is, the code you
 share between platforms.
 
-This `shared` module is also where you'll write your Compose Multiplatform code.
-In `shared/src/commonMain/kotlin/App.kt`, you can find the shared root `@Composable` function for your app.
+This `composeApp` module is also where you'll write your Compose Multiplatform code.
+In `composeApp/src/commonMain/kotlin/App.kt`, you can find the composeApp root `@Composable` function for your app.
 
-It uses Gradle as the build system. You can add dependencies and change settings in `shared/build.gradle.kts`.
-The `shared` module builds into a Java library, an Android library, and an iOS framework.
+It uses Gradle as the build system. You can add dependencies and change settings in `composeApp/build.gradle.kts`.
+The `composeApp` module builds into a Java library, an Android library, and an iOS framework.
 
 ### `desktopApp`
 
 This is a Kotlin module that builds into a desktop application. It uses Gradle as the build system. The `desktopApp`
-module depends on and uses the `shared` module as a regular library.
+module depends on and uses the `composeApp` module as a regular library.
 
 ### `androidApp`
 
 This is a Kotlin module that builds into an Android application. It uses Gradle as the build system.
-The `androidApp` module depends on and uses the `shared` module as a regular Android library.
+The `androidApp` module depends on and uses the `composeApp` module as a regular Android library.
 
 ### `iosApp`
 
 This is an Xcode project that builds into an iOS application.
-It depends on and uses the `shared` module as a CocoaPods dependency.
+It depends on and uses the `composeApp` module as a CocoaPods dependency.
 
 ## Run your application
 
@@ -339,7 +339,7 @@ To run the application, set the `TEAM_ID`:
 You can now make some changes in the code and check that they are visible in both the iOS and Android applications at
 the same time:
 
-1. In Android Studio, navigate to the `shared/src/commonMain/kotlin/App.kt` file.
+1. In Android Studio, navigate to the `composeApp/src/commonMain/kotlin/App.kt` file.
    This is the common entry point for your Compose Multiplatform app.
 
    Here, you see the code responsible for rendering the "Hello, World!" button and the animated Compose Multiplatform logo:

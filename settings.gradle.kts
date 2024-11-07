@@ -1,37 +1,22 @@
-rootProject.name = "compose-multiplatform-library-template"
+rootProject.name = "compose-scrollbar-modifier"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(":sample:androidApp")
 include(":lib")
 include(":sample:desktopApp")
-include(":sample:shared")
+include(":sample:composeApp")
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
-        google()
+        gradlePluginPortal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-
-    plugins {
-        val kotlinVersion = extra["kotlin.version"] as String
-        val agpVersion = extra["agp.version"] as String
-        val composeVersion = extra["compose.version"] as String
-        val dokkaVersion = extra["dokka.version"] as String
-        val klintVersion = extra["klint.version"] as String
-        val mavenPublishVersion = extra["maven-publish.version"] as String
-
-        kotlin("jvm").version(kotlinVersion)
-        kotlin("multiplatform").version(kotlinVersion)
-        kotlin("android").version(kotlinVersion)
-
-        id("com.android.application").version(agpVersion)
-        id("com.android.library").version(agpVersion)
-
-        id("org.jetbrains.compose").version(composeVersion)
-        id("org.jetbrains.dokka").version(dokkaVersion)
-        id("org.jlleitschuh.gradle.ktlint").version(klintVersion)
-        id("com.vanniktech.maven.publish").version(mavenPublishVersion)
     }
 }
 
@@ -41,8 +26,14 @@ plugins {
 
 dependencyResolutionManagement {
     repositories {
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
-        google()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
