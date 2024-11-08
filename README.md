@@ -1,6 +1,6 @@
 # Compose Scrollbar Modifier
 
-A multiplatform Jetpack Compose library for adding customizable scrollbars to scrollable composables.
+A Compose multiplatform library for adding customizable scrollbars to scrollable composables.
 
 ## Table of Contents
 
@@ -21,7 +21,6 @@ A multiplatform Jetpack Compose library for adding customizable scrollbars to sc
 - Customizable scrollbar appearance and behavior
 - Draggable scrollbar indicator
 - Auto-hide scrollbar option
-- Smooth scrolling animations
 - Multiplatform support (Android, iOS, Desktop)
 
 ## Installation
@@ -30,7 +29,7 @@ To use the Compose Scrollbar Modifier library in your project, add the following
 
 ```gradle
 dependencies {
-    implementation("com.shambu.compose.scrollbar:scrollbar-modifier:1.0.0")
+    implementation("com.shambu.compose.scrollbar:scrollbar-modifier:x.x.x")
 }
 ```
 
@@ -41,42 +40,36 @@ dependencies {
 To add horizontal scrolling with a scrollbar, use the `horizontalScrollWithScrollbar` function:
 
 ```kotlin
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarState
-import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
-import com.shambu.compose.scrollbar.rememberScrollbarState
+@Composable
+fun HorizontalScrollExample() {
+    val scrollState = rememberScrollState()
+    val scrollbarState = rememberScrollbarState()
 
-// Inside your composable function
-val scrollState = rememberScrollState()
-val scrollbarState = rememberScrollbarState()
-
-Row(
-    modifier = Modifier
-        .horizontalScrollWithScrollbar(scrollState, scrollbarState)
-) {
-    // Your content here
+    Row(
+        modifier = Modifier
+            .horizontalScrollWithScrollbar(scrollState, scrollbarState)
+    ) {
+        // Your content here
+    }
 }
 ```
 
 ### Vertical Scrollbar
 
-Similarly, for vertical scrolling:
+Similarly, to add horizontal scrolling with a scrollbar, use the `horizontalScrollWithScrollbar` function:
 
 ```kotlin
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarState
-import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
-import com.shambu.compose.scrollbar.rememberScrollbarState
+@Composable
+fun VerticalScrollExample() {
+    val scrollState = rememberScrollState()
+    val scrollbarState = rememberScrollbarState()
 
-// Inside your composable function
-val scrollState = rememberScrollState()
-val scrollbarState = rememberScrollbarState()
-
-Column(
-    modifier = Modifier
-        .verticalScrollWithScrollbar(scrollState, scrollbarState)
-) {
-    // Your content here
+    Column(
+        modifier = Modifier
+            .verticalScrollWithScrollbar(scrollState, scrollbarState)
+    ) {
+        // Your content here
+    }
 }
 ```
 
@@ -85,9 +78,6 @@ Column(
 The `ScrollbarConfig` class provides various options to customize the scrollbar appearance and behavior:
 
 ```kotlin
-import androidx.compose.ui.graphics.Color
-import com.shambu.compose.scrollbar.ScrollbarConfig
-
 val scrollbarConfig = ScrollbarConfig(
     indicatorThickness = 8.dp,
     indicatorColor = Color.Gray.copy(alpha = 0.7f),
@@ -123,7 +113,11 @@ fun CustomizedScrollbarExample() {
 
     Box(
         modifier = Modifier
-            .verticalScrollWithScrollbar(scrollState, scrollbarState, scrollbarConfig = scrollbarConfig)
+            .verticalScrollWithScrollbar(
+               scrollState, 
+               scrollbarState, 
+               scrollbarConfig = scrollbarConfig
+            )
             .fillMaxWidth()
             .requiredHeight(10000.dp)
     ) {
