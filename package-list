@@ -1,6 +1,5 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-$dokka.location:////PointingToDeclaration/lib/[root]/index.html
-$dokka.location://getPlatformName/#/PointingToDeclaration/lib/[root]/get-platform-name.html
+$dokka.location:////PointingToDeclaration/lib/[root].html
 module:lib
 com.shambu.compose.scrollbar
