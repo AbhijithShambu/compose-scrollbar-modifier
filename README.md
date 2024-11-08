@@ -158,12 +158,3 @@ Contributions to the project are welcome! Please feel free to submit pull reques
 ## License
 
 [Insert license text here]
-```
-
-This improved documentation includes:
-
-1. More detailed feature list, including multiplatform support.
-2. Expanded customization options with explanations.
-3. Additional example for customized scrollbar.
-4. Placeholders for usage GIFs to demonstrate the library's functionality.
-5. More comprehensive troubleshooting section.
