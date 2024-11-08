@@ -14,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shambu.compose.scrollbar.sample.data.SongModel
 import io.kamel.image.KamelImage
@@ -40,7 +42,8 @@ fun SongItem(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(68.dp)
-                .clip(MaterialTheme.shapes.large),
+                .clip(MaterialTheme.shapes.large)
+                .background(Color(0xFFC6A9BF)),
         )
 
         Spacer(Modifier.width(16.dp))
@@ -50,10 +53,11 @@ fun SongItem(
                 poster.title,
                 color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.body1,
+                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.semantics { contentDescription = "title" },
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
 
             Text(
                 poster.description,

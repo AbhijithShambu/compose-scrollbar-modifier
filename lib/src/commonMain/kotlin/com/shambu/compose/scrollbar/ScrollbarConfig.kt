@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
  */
 data class ScrollbarConfig(
     val indicatorThickness: Dp = 8.dp,
-    val indicatorColor: Color = Color.Gray.copy(alpha = 0.7f),
+    val indicatorColor: Color = Color.DarkGray.copy(alpha = 0.75f),
     val indicatorCornerRadius: Dp = indicatorThickness / 2,
     val minimumIndicatorLength: Dp = 24.dp,
     val barThickness: Dp = indicatorThickness,
-    val barColor: Color = Color.LightGray.copy(alpha = 0.7f),
+    val barColor: Color = Color.LightGray.copy(alpha = 0.75f),
     val barCornerRadius: Dp = barThickness / 2,
     val showAlways: Boolean = false,
     val autoHideAnimationSpec: AnimationSpec<Float>? = null,

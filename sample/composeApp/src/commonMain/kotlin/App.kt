@@ -1,23 +1,33 @@
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shambu.compose.scrollbar.ScrollbarConfig
+import com.shambu.compose.scrollbar.ScrollbarState
 import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
 import com.shambu.compose.scrollbar.rememberScrollbarState
 import com.shambu.compose.scrollbar.sample.data.AlbumModel
@@ -26,20 +36,30 @@ import com.shambu.compose.scrollbar.sample.theme.AppTheme
 import com.shambu.compose.scrollbar.sample.ui.components.AlbumCover
 import com.shambu.compose.scrollbar.sample.ui.components.SongItem
 import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
+import kotlin.math.max
+import kotlin.math.min
+
+const val DARK_THEME = true
+val indicatorColor = Color(0xffB33951)
+val barColor = Color(0xFFEEDDEE)
 
 @Composable
 fun App() {
-    AppTheme(false) {
+    AppTheme(DARK_THEME) {
         Column(
             Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
+                .padding(WindowInsets.systemBars.asPaddingValues())
                 .verticalScrollWithScrollbar(
                     rememberScrollState(),
                     rememberScrollbarState(),
                     scrollbarConfig =
                         ScrollbarConfig(
-                            padding = PaddingValues(end = 4.dp),
+                            padding = PaddingValues(end = 1.dp),
+                            indicatorColor = indicatorColor,
+                            indicatorThickness = 12.dp,
+                            barColor = barColor,
                         ),
                 ).padding(vertical = 24.dp),
         ) {
@@ -48,6 +68,7 @@ fun App() {
                     "Melody",
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h5,
+                    fontWeight = FontWeight.Bold,
                     modifier =
                         Modifier
                             .padding(horizontal = 16.dp)
@@ -66,12 +87,13 @@ fun App() {
                             .semantics { contentDescription = "subtitle" },
                 )
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(24.dp))
 
                 Text(
                     "Popular Albums",
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold,
                     modifier =
                         Modifier
                             .padding(horizontal = 16.dp)
@@ -83,24 +105,19 @@ fun App() {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .horizontalScrollWithScrollbar(
-                        rememberScrollState(),
-                        rememberScrollbarState(),
-                        scrollbarConfig =
-                            ScrollbarConfig(
-                                indicatorColor = Color(0xffd62a47),
-                                indicatorThickness = 16.dp,
-                                barColor = Color(0x88d42aaa),
-                                barThickness = 24.dp,
-                                padding = PaddingValues(horizontal = 80.dp),
-                                showAlways = true,
-                            ),
-                    ).padding(horizontal = 24.dp)
+                    .background(Color(if (DARK_THEME) 0xFF0C051B else 0xFF7B506F))
+                    .padding(vertical = 16.dp)
+                    .customScrollbar(rememberScrollState(), rememberScrollbarState())
+                    .padding(horizontal = 24.dp)
                     .padding(top = 8.dp, bottom = 36.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 sampleAlbums.forEach { poster ->
-                    AlbumCover(poster, width = 260.dp)
+                    AlbumCover(
+                        poster,
+                        width = 260.dp,
+                        modifier = Modifier.shadow(6.dp, RoundedCornerShape(20.dp)),
+                    )
                 }
             }
             Spacer(Modifier.height(24.dp))
@@ -113,19 +130,76 @@ fun App() {
                     "Popular Songs",
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold,
                     modifier =
                         Modifier
                             .padding(horizontal = 16.dp)
                             .semantics { contentDescription = "popular releases" },
                 )
-                Spacer(Modifier.height(8.dp))
+
                 sampleAlbums[0].songs.forEach { song ->
-                    SongItem(song)
+                    SongItem(song, modifier = Modifier.shadow(1.dp, MaterialTheme.shapes.large))
                 }
             }
         }
     }
 }
+
+fun Modifier.customScrollbar(
+    scrollState: ScrollState,
+    scrollbarState: ScrollbarState,
+): Modifier =
+    horizontalScrollWithScrollbar(
+        scrollState,
+        scrollbarState,
+        scrollbarConfig =
+            ScrollbarConfig(
+                indicatorThickness = 16.dp,
+                barThickness = 24.dp,
+                padding = PaddingValues(horizontal = 80.dp),
+                showAlways = true,
+            ),
+        onDrawScrollbar = { measurements ->
+            val barCornerRadius = 12.dp
+            val indicatorCornerRadius = 8.dp
+
+            // Draw bar
+            if (barColor.alpha > 0) {
+                drawRoundRect(
+                    color = barColor,
+                    cornerRadius = CornerRadius(barCornerRadius.toPx(), barCornerRadius.toPx()),
+                    topLeft = measurements.barBounds.topLeft,
+                    size = measurements.barBounds.size,
+                    alpha = measurements.alpha,
+                )
+            }
+
+            // Draw indicator
+            val indicatorBrush = Brush.linearGradient(
+                0f to indicatorColor,
+                0.55f to Color(0xFFFFFF),
+                1f to indicatorColor,
+                start = measurements.indicatorBounds.topLeft,
+                end = measurements.indicatorBounds.bottomRight,
+            )
+
+            drawRoundRect(
+                brush = indicatorBrush,
+                cornerRadius = indicatorCornerRadius.let { CornerRadius(it.toPx(), it.toPx()) },
+                topLeft = measurements.indicatorBounds.topLeft.copy(
+                    x = min(
+                        max(
+                            measurements.indicatorBounds.topLeft.x,
+                            measurements.barBounds.topLeft.x + 5.dp.toPx(),
+                        ),
+                        measurements.barBounds.topRight.x - 5.dp.toPx() - measurements.indicatorBounds.width,
+                    ),
+                ),
+                size = measurements.indicatorBounds.size,
+                alpha = measurements.alpha,
+            )
+        },
+    )
 
 expect fun getPlatformName(): String
 
@@ -155,7 +229,7 @@ val sampleAlbums =
                     SongModel(
                         it,
                         "3:30",
-                        "https://picsum.photos/id/${200 + index}/200/300",
+                        "https://picsum.photos/id/${28 + index * 10}/200/300",
                         "Cosmic Oddesey",
                     )
                 }
@@ -189,4 +263,4 @@ val sampleAlbums =
             style = "Fitness",
             songs = (1..10).map { SongModel("Track $it", "3:30", "", "Unleash Your Potential") },
         ),
-    ).mapIndexed { index, it -> it.copy(imageUrl = "https://picsum.photos/id/${250 + index}/200/300") }
+    ).mapIndexed { index, it -> it.copy(imageUrl = "https://picsum.photos/id/${25 + index}/200/300") }

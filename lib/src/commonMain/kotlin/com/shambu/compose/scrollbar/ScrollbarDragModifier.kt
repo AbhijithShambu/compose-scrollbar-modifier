@@ -67,7 +67,7 @@ internal fun Modifier.scrollbarDrag(
                         firstPositionLength - scrollbarState.indicatorLength / 2 - startBoundsPosition
 
                     val getContentOffset = { barOffset: Float ->
-                        barOffset * scrollbarState.contentLength / scrollbarState.scrollbarLength
+                        barOffset * scrollbarState.contentLength / scrollbarState.barLength
                     }
 
                     val shouldScrollToInitialPosition =
