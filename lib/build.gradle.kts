@@ -38,7 +38,9 @@ kotlin {
 }
 
 android {
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = libs.versions.android.compileSdk
+        .get()
+        .toInt()
     namespace = "com.shambu.compose.scrollbar"
 
 //    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -46,7 +48,9 @@ android {
 //    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk
+            .get()
+            .toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

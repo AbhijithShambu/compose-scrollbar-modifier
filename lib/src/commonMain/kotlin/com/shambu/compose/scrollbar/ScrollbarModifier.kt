@@ -17,12 +17,33 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.LayoutDirection
 import kotlin.math.max
 
+/**
+ * Adds a scrollbar to the composable that is being modified.
+ *
+ * Recommended to use [verticalScrollWithScrollbar] or [horizontalScrollWithScrollbar]
+ * or [scrollWithScrollbar] for smooth behaviour
+ *
+ * This modifier allows you to add a scrollbar to a scrollable composable, such as a
+ * `Column` or `Row`. The scrollbar's appearance and behavior can be customized
+ * using the `config` parameter.
+ *
+ * @param scrollState The scroll state that the scrollbar will be linked to.
+ * @param scrollbarState The state of the scrollbar, including its position and visibility.
+ * @param direction The orientation of the scrollbar (horizontal or vertical).
+ * @param config The configuration for the scrollbar's appearance and behavior.
+ *
+ * @return A modifier that adds a scrollbar to the composable.
+ *
+ * @see ScrollState
+ * @see ScrollbarState
+ * @see Orientation
+ * @see ScrollbarConfig
+ */
 fun Modifier.scrollbar(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
     direction: Orientation,
     config: ScrollbarConfig = ScrollbarConfig(),
-    isDragEnabled: Boolean = true,
 ): Modifier =
     composed {
         var (
@@ -176,4 +197,4 @@ fun Modifier.scrollbar(
                 )
             }
         }
-    }.scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)
+    }.scrollbarDrag(scrollState, scrollbarState, direction, config.isDragEnabled)

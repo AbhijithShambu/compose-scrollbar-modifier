@@ -15,6 +15,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+/**
+ * ***(For internal use only)***
+ *
+ * Enables drag interaction with a scrollbar to control scrolling.
+ *
+ * This internal modifier is applied to the scrollbar's draggable area to enable
+ * user interaction for controlling the scroll position. It links the scrollbar's
+ * drag gestures to the provided [scrollState] and [scrollbarState], allowing
+ * users to drag the scrollbar thumb to scroll the content.
+ *
+ * @param scrollState The [ScrollState] that controls the scrolling of the content.
+ * @param scrollbarState The [ScrollbarState] that manages the scrollbar's position and visibility.
+ * @param direction The orientation of the scrollbar (horizontal or vertical).
+ * @param isDragEnabled Whether drag interaction with the scrollbar is enabled. If `false`,
+ * the scrollbar will not respond to drag gestures. Defaults to `true`.
+ *
+ * @return A [Modifier] that enables drag interaction with the scrollbar.
+ */
 internal fun Modifier.scrollbarDrag(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
