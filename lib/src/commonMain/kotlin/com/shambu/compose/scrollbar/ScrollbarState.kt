@@ -26,15 +26,13 @@ class ScrollbarState internal constructor() {
 
     internal var isVertical: Boolean = true
 
-    val dragBounds: Rect
-        get() = Rect(
+    val dragBounds: Rect get() = Rect(
         top = barBounds.top - 16,
         bottom = barBounds.bottom + 16,
         left = barBounds.left - 16,
-        right = barBounds.right + 16
+        right = barBounds.right + 16,
     )
 }
-
 
 @Composable
 fun rememberScrollbarState(): ScrollbarState = remember { ScrollbarState() }

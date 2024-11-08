@@ -15,86 +15,88 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-fun Modifier.scrollbarDrag(
+internal fun Modifier.scrollbarDrag(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
     direction: Orientation,
-    isDragEnabled: Boolean = true
-): Modifier = composed {
-    val coroutineScope = rememberCoroutineScope()
+    isDragEnabled: Boolean = true,
+): Modifier =
+    composed {
+        val coroutineScope = rememberCoroutineScope()
 
-    pointerInput(isDragEnabled) {
-        if (isDragEnabled) {
-            awaitEachGesture {
-                // Wait for the first down event (start of pan)
-                val down = awaitFirstDown(requireUnconsumed = false)
-                val firstPosition = down.position
+        pointerInput(isDragEnabled) {
+            if (isDragEnabled) {
+                awaitEachGesture {
+                    // Wait for the first down event (start of pan)
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val firstPosition = down.position
 
-                val mode = scrollbarState.dragBounds.contains(firstPosition)
-                scrollbarState.isScrollbarDragActive = mode
+                    val mode = scrollbarState.dragBounds.contains(firstPosition)
+                    scrollbarState.isScrollbarDragActive = mode
 
-                if (!scrollbarState.isScrollbarDragActive) return@awaitEachGesture
+                    if (!scrollbarState.isScrollbarDragActive) return@awaitEachGesture
 
-                if (down.isConsumed) {
-                    coroutineScope.launch { scrollState.stopScroll() }
-                }
+                    if (down.isConsumed) {
+                        coroutineScope.launch { scrollState.stopScroll() }
+                    }
 
-                // Handle the drag (pan) and track movements
-                val isVertical = direction == Orientation.Vertical
-                val firstPositionLength = if (isVertical) firstPosition.y else firstPosition.x
-                val barBoundsTopLeft = scrollbarState.dragBounds.topLeft
-                val startBoundsPosition = if (isVertical) barBoundsTopLeft.y else barBoundsTopLeft.x
-                val initialBarOffset = firstPositionLength - scrollbarState.indicatorLength / 2 -
-                        startBoundsPosition
+                    // Handle the drag (pan) and track movements
+                    val isVertical = direction == Orientation.Vertical
+                    val firstPositionLength = if (isVertical) firstPosition.y else firstPosition.x
+                    val barBoundsTopLeft = scrollbarState.dragBounds.topLeft
+                    val startBoundsPosition = if (isVertical) barBoundsTopLeft.y else barBoundsTopLeft.x
+                    val initialBarOffset =
+                        firstPositionLength - scrollbarState.indicatorLength / 2 - startBoundsPosition
 
-                val getContentOffset = { barOffset: Float ->
-                    barOffset * scrollbarState.contentLength / scrollbarState.scrollbarLength
-                }
+                    val getContentOffset = { barOffset: Float ->
+                        barOffset * scrollbarState.contentLength / scrollbarState.scrollbarLength
+                    }
 
-                val shouldScrollToInitialPosition = !scrollbarState
-                    .indicatorBounds.contains(firstPosition)
+                    val shouldScrollToInitialPosition =
+                        !scrollbarState.indicatorBounds.contains(firstPosition)
 
-                val scrollToInitialPosition = suspend {
-                    // Scroll to initial position
-                    val initialContentOffset = getContentOffset(initialBarOffset).roundToInt()
-                    scrollState.scrollTo(initialContentOffset)
-                }
-
-                if (shouldScrollToInitialPosition) {
-                    coroutineScope.launch {
-                        if (down.isConsumed) {
-                            delay(10)
+                    val scrollToInitialPosition =
+                        suspend {
+                            // Scroll to initial position
+                            val initialContentOffset = getContentOffset(initialBarOffset).roundToInt()
+                            scrollState.scrollTo(initialContentOffset)
                         }
-                        scrollToInitialPosition()
-                    }
-                }
 
-                var jumpToInitialPosition = shouldScrollToInitialPosition && down.isConsumed
-
-                do {
-                    val event = awaitPointerEvent()
-
-                    // Fallback
-                    if (jumpToInitialPosition) {
-                        jumpToInitialPosition = false
-                        coroutineScope.launch { scrollToInitialPosition() }
-                    }
-
-                    val panChange = event.changes.firstOrNull()?.positionChange()
-
-                    if (panChange != null) {
-                        val updatedBarOffset = if (isVertical) panChange.y else panChange.x
+                    if (shouldScrollToInitialPosition) {
                         coroutineScope.launch {
-                            // Panning
-                            scrollState.scrollBy(getContentOffset(updatedBarOffset))
+                            if (down.isConsumed) {
+                                delay(10)
+                            }
+                            scrollToInitialPosition()
                         }
-                        event.changes.forEach { it.consume() } // Consume the change to avoid interference
                     }
-                } while (event.changes.any { it.pressed }) // Continue until the finger is lifted
 
-                // Pan gesture has ended when `pressed` is false
-                scrollbarState.isScrollbarDragActive = false
+                    var jumpToInitialPosition = shouldScrollToInitialPosition && down.isConsumed
+
+                    do {
+                        val event = awaitPointerEvent()
+
+                        // Fallback
+                        if (jumpToInitialPosition) {
+                            jumpToInitialPosition = false
+                            coroutineScope.launch { scrollToInitialPosition() }
+                        }
+
+                        val panChange = event.changes.firstOrNull()?.positionChange()
+
+                        if (panChange != null) {
+                            val updatedBarOffset = if (isVertical) panChange.y else panChange.x
+                            coroutineScope.launch {
+                                // Panning
+                                scrollState.scrollBy(getContentOffset(updatedBarOffset))
+                            }
+                            event.changes.forEach { it.consume() } // Consume the change to avoid interference
+                        }
+                    } while (event.changes.any { it.pressed }) // Continue until the finger is lifted
+
+                    // Pan gesture has ended when `pressed` is false
+                    scrollbarState.isScrollbarDragActive = false
+                }
             }
         }
     }
-}

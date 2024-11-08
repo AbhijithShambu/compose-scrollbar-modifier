@@ -26,20 +26,21 @@ import io.kamel.image.asyncPainterResource
 fun SongItem(
     poster: SongModel,
     modifier: Modifier = Modifier,
-    actionButton: (@Composable () -> Unit)? = null
+    actionButton: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier
             .background(MaterialTheme.colors.surface, shape = MaterialTheme.shapes.medium)
             .padding(10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         KamelImage(
             resource = { asyncPainterResource(poster.imageUrl) },
             contentDescription = poster.title,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(68.dp)
-                .clip(MaterialTheme.shapes.large)
+            modifier = Modifier
+                .size(68.dp)
+                .clip(MaterialTheme.shapes.large),
         )
 
         Spacer(Modifier.width(16.dp))
@@ -49,7 +50,7 @@ fun SongItem(
                 poster.title,
                 color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier.semantics { contentDescription = "title" }
+                modifier = Modifier.semantics { contentDescription = "title" },
             )
 
             Spacer(Modifier.height(8.dp))
@@ -58,7 +59,7 @@ fun SongItem(
                 poster.description,
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.semantics { contentDescription = "description" }
+                modifier = Modifier.semantics { contentDescription = "description" },
             )
         }
 

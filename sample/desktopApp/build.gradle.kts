@@ -9,7 +9,7 @@ plugins {
 kotlin {
     jvm()
     sourceSets {
-         jvmMain.dependencies {
+        jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(project(":sample:composeApp"))
         }

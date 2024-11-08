@@ -16,57 +16,61 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 
 // Only for Debugging
-private const val isDebugMode = false
+private const val IS_DEBUG_MODE = false
 
-private fun Modifier.scrollbarDebugger(
+internal fun Modifier.scrollbarDebugger(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
-    debugState: ScrollbarDebugState
-): Modifier = (composed {
-    val isGestureOngoing = remember { ValueHolder(false) }
+    debugState: ScrollbarDebugState,
+): Modifier =
+    composed {
+        val isGestureOngoing = remember { ValueHolder(false) }
 
-    LaunchedEffect(scrollState.isScrollInProgress, scrollbarState.isScrollbarDragActive) {
-        if (!scrollbarState.isScrollbarDragActive && !scrollState.isScrollInProgress) {
-            debugState.touchPosition = null
-        }
-    }
-
-    LaunchedEffect(debugState.touchPosition) {
-        if (!isGestureOngoing.value && debugState.touchPosition != null) {
-            isGestureOngoing.value = true
-        }
-
-        if (debugState.touchPosition == null) {
-            isGestureOngoing.value = false
-        }
-    }
-    drawWithCache {
-        onDrawWithContent {
-            drawContent()
-
-            // Added for debugging
-            // Draw indicator
-            drawRoundRect(
-                color = Color.Black,
-                cornerRadius = CornerRadius.Zero,
-                topLeft = scrollbarState.dragBounds.topLeft,
-                size = scrollbarState.dragBounds.size,
-                alpha = 1f,
-                style = Stroke(1.5f)
-            )
-
-            if (debugState.touchPosition != null) {
-                drawCircle(
-                    Color.Black, 10.dp.toPx(),
-                    center = debugState.touchPosition!!
-                )
+        LaunchedEffect(scrollState.isScrollInProgress, scrollbarState.isScrollbarDragActive) {
+            if (!scrollbarState.isScrollbarDragActive && !scrollState.isScrollInProgress) {
+                debugState.touchPosition = null
             }
         }
-    }
-}).takeIf { isDebugMode } ?: Modifier
 
-class ScrollbarDebugState {
+        LaunchedEffect(debugState.touchPosition) {
+            if (!isGestureOngoing.value && debugState.touchPosition != null) {
+                isGestureOngoing.value = true
+            }
+
+            if (debugState.touchPosition == null) {
+                isGestureOngoing.value = false
+            }
+        }
+        drawWithCache {
+            onDrawWithContent {
+                drawContent()
+
+                // Added for debugging
+                // Draw indicator
+                drawRoundRect(
+                    color = Color.Black,
+                    cornerRadius = CornerRadius.Zero,
+                    topLeft = scrollbarState.dragBounds.topLeft,
+                    size = scrollbarState.dragBounds.size,
+                    alpha = 1f,
+                    style = Stroke(1.5f),
+                )
+
+                if (debugState.touchPosition != null) {
+                    drawCircle(
+                        Color.Black,
+                        10.dp.toPx(),
+                        center = debugState.touchPosition!!,
+                    )
+                }
+            }
+        }
+    }.takeIf { IS_DEBUG_MODE } ?: Modifier
+
+internal class ScrollbarDebugState {
     var touchPosition by mutableStateOf<Offset?>(null)
 }
 
-class ValueHolder<T>(var value: T)
+internal class ValueHolder<T>(
+    var value: T,
+)

@@ -1,3 +1,3 @@
 
 
-expect fun getPlatformName(): String
+internal expect fun getPlatformName(): String

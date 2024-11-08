@@ -17,5 +17,5 @@ data class ScrollbarConfig(
     val showAlways: Boolean = false,
     val autoHideAnimationSpec: AnimationSpec<Float>? = null,
     val padding: PaddingValues = PaddingValues(all = 0.dp),
-    val isDragEnabled: Boolean = true
+    val isDragEnabled: Boolean = true,
 )

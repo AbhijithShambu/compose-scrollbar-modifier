@@ -12,5 +12,5 @@ data class SongModel(
     val title: String,
     val description: String,
     val imageUrl: String,
-    val album: String
+    val album: String,
 )

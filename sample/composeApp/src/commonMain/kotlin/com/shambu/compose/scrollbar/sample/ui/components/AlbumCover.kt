@@ -32,62 +32,72 @@ import com.shambu.compose.scrollbar.sample.data.AlbumModel
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
-
 @Composable
-fun AlbumCover(album: AlbumModel, width: Dp, modifier: Modifier = Modifier) {
+fun AlbumCover(
+    album: AlbumModel,
+    width: Dp,
+    modifier: Modifier = Modifier,
+) {
     val aspectRatio = 1.15f
     val widthPx = with(LocalDensity.current) { width.toPx() }
 
     Box(
-        modifier = modifier
-            .width(width).aspectRatio(aspectRatio)
+        modifier
+            .width(width)
+            .aspectRatio(aspectRatio)
             .clip(MaterialTheme.shapes.large)
-            .background(Color.LightGray.copy(alpha = 0.5f))
+            .background(Color.LightGray.copy(alpha = 0.5f)),
     ) {
         // Background image
         KamelImage(
             resource = { asyncPainterResource(album.imageUrl) },
             contentDescription = "Album art",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier.matchParentSize(),
         )
 
-        Box(modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(8.dp)
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.large)
+        Box(
+            Modifier
+                .align(Alignment.BottomEnd)
+                .padding(8.dp)
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large),
         ) {
             // Blur image
             KamelImage(
                 resource = { asyncPainterResource(album.imageUrl) },
                 contentDescription = null,
-                contentScale = object : ContentScale {
-                    override fun computeScaleFactor(srcSize: Size, dstSize: Size): ScaleFactor {
-                        val scale = widthPx / srcSize.width
-                        return ScaleFactor(scale, scale)
-                    }
-                },
+                contentScale =
+                    object : ContentScale {
+                        override fun computeScaleFactor(
+                            srcSize: Size,
+                            dstSize: Size,
+                        ): ScaleFactor {
+                            val scale = widthPx / srcSize.width
+                            return ScaleFactor(scale, scale)
+                        }
+                    },
                 alignment = Alignment.BottomCenter,
-                modifier = Modifier
-                    .matchParentSize()
-                    .aspectRatio(aspectRatio)
-                    .blur(10.dp, BlurredEdgeTreatment.Unbounded)
-                    .drawWithContent {
-                        drawContent()
-                        drawRect(Color.Black.copy(alpha = 0.25f))
-                    }
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .aspectRatio(aspectRatio)
+                        .blur(10.dp, BlurredEdgeTreatment.Unbounded)
+                        .drawWithContent {
+                            drawContent()
+                            drawRect(Color.Black.copy(alpha = 0.25f))
+                        },
             )
 
             Column(
-                Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+                Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
             ) {
                 Text(
                     album.title,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.semantics { contentDescription = "album_title" },
-                    color = Color.White
+                    color = Color.White,
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -96,7 +106,7 @@ fun AlbumCover(album: AlbumModel, width: Dp, modifier: Modifier = Modifier) {
                     album.description,
                     style = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.semantics { contentDescription = "album_artist" },
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }

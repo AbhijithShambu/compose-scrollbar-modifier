@@ -12,18 +12,17 @@ fun Modifier.verticalScrollWithScrollbar(
     enabled: Boolean = true,
     flingBehavior: FlingBehavior? = null,
     reverseScrolling: Boolean = false,
-    scrollbarConfig: ScrollbarConfig = ScrollbarConfig()
+    scrollbarConfig: ScrollbarConfig = ScrollbarConfig(),
 ) = this
     .scrollbar(
         scrollState = scrollState,
         scrollbarState = scrollbarState,
         direction = Orientation.Vertical,
         config = scrollbarConfig,
-        isDragEnabled = enabled
-    )
-    .verticalScroll(
+        isDragEnabled = enabled,
+    ).verticalScroll(
         state = scrollState,
         enabled = enabled && !scrollbarState.isScrollbarDragActive,
         flingBehavior = flingBehavior,
-        reverseScrolling = reverseScrolling
+        reverseScrolling = reverseScrolling,
     )

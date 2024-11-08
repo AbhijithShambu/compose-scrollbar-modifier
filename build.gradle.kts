@@ -16,9 +16,13 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint") // Version should be inherited from parent
 
     // Optionally configure plugin
-    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        version.set("1.0.1")
-    }
+//    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+//        version.set("1.0.1")
+//    }
+
+//    dependencies {
+//        ktlintRuleset("io.nlopez.compose.rules:ktlint:0.4.17")
+//    }
 }
 
 tasks.register<Copy>("setUpGitHooks") {
