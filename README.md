@@ -10,10 +10,10 @@ A Compose multiplatform library for adding customizable scrollbars to scrollable
    - [Horizontal Scrollbar](#horizontal-scrollbar)
    - [Vertical Scrollbar](#vertical-scrollbar)
 4. [Customization Options](#customization-options)
-5. [Examples](#examples)
-6. [Troubleshooting](#troubleshooting)
-7. [Contributing](#contributing)
-8. [License](#license)
+5. [Advanced Usage](#advanced-usage)
+7. [Troubleshooting](#troubleshooting)
+8. [Contributing](#contributing)
+9. [License](#license)
 
 ## Features
 
@@ -28,9 +28,7 @@ A Compose multiplatform library for adding customizable scrollbars to scrollable
 To use the Compose Scrollbar Modifier library in your project, add the following dependency to your `build.gradle` file:
 
 ```gradle
-dependencies {
-    implementation("com.shambu.compose.scrollbar:scrollbar-modifier:x.x.x")
-}
+// To be published soon ;)
 ```
 
 ## Basic Usage
@@ -120,6 +118,58 @@ fun CustomizedScrollbarExample() {
             )
             .fillMaxWidth()
             .requiredHeight(10000.dp)
+    ) {
+        // Your content here
+    }
+}
+```
+
+## Advanced Usage
+To custom draw scrollbar, 
+
+```kotlin
+@Composable
+fun CustomScrollbarExample() {
+    val scrollState = rememberScrollState()
+    val scrollbarState = rememberScrollbarState()
+
+    Row(
+        modifier = Modifier
+            .horizontalScrollWithScrollbar(
+               scrollState, scrollbarState,
+               onDraw = { measurements ->
+                  // Draw scrollbar based on measurements provided
+               }
+            )
+    ) {
+        // Your content here
+    }
+}
+```
+
+To make both custom measurements and drawing,
+
+```kotlin
+@Composable
+fun CustomScrollbarExample() {
+    val scrollState = rememberScrollState()
+    val scrollbarState = rememberScrollbarState()
+
+    Row(
+        modifier = Modifier
+            .horizontalScrollWithScrollbar(
+               scrollState, scrollbarState,
+               onMeasureAndDrawScrollbar = { layout ->
+                  // Make measurements using layout and config
+                  val barBounds = ...
+                  val indicatorBounds = ...
+                  val measurements = ScrollbarMeasurements(barBounds, indicatorBounds, layout.scrollbarAlpha)
+
+                  drawWithMeasurements(measurements) {
+                     // DrawScope to draw scrollbar based on measurements provided
+                  }
+               }
+            )
     ) {
         // Your content here
     }
