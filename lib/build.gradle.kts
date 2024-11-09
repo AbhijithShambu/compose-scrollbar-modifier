@@ -33,6 +33,15 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.ui)
+            implementation(libs.androidx.annotation.jvm)
+        }
+    }
+
+    targets.all {
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs += "-Xcontext-receivers"
+            }
         }
     }
 }

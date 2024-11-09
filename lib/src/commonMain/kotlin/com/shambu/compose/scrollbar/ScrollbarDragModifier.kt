@@ -64,10 +64,15 @@ internal fun Modifier.scrollbarDrag(
                     val barBoundsTopLeft = scrollbarState.dragBounds.topLeft
                     val startBoundsPosition = if (isVertical) barBoundsTopLeft.y else barBoundsTopLeft.x
                     val initialBarOffset =
-                        firstPositionLength - scrollbarState.indicatorLength / 2 - startBoundsPosition
+                        firstPositionLength - (scrollbarState.indicatorLength / 2) - startBoundsPosition
 
-                    val getContentOffset = { barOffset: Float ->
-                        barOffset * scrollbarState.contentLength / scrollbarState.barLength
+                    val getContentOffset = { indicatorOffset: Float ->
+                        val barLength = scrollbarState.barLength
+                        val indicatorLength = scrollbarState.indicatorLength
+                        val contentLength = scrollbarState.contentLength
+                        val viewPortLength = if (isVertical) size.height else size.width
+
+                        indicatorOffset * (contentLength - viewPortLength) / (barLength - indicatorLength)
                     }
 
                     val shouldScrollToInitialPosition =

@@ -17,6 +17,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
 /**
@@ -49,41 +50,38 @@ fun Modifier.scrollbar(
     onDraw: DrawScope.(measurements: ScrollbarMeasurements) -> Unit = { measurements ->
         drawDefaultScrollbar(measurements, config)
     },
-): Modifier {
-    val (
-        indicatorThickness, _, _, minimumIndicatorLength,
-        barThickness, _, _, showAlways, alphaAnimationSpec, padding,
-    ) = config
-
-    return scrollbar(
+): Modifier =
+    scrollbar(
         scrollState = scrollState,
         scrollbarState = scrollbarState,
         direction = direction,
-        showAlways = showAlways,
-        autoHideAnimationSpec = alphaAnimationSpec,
+        showAlways = config.showAlways,
+        autoHideAnimationSpec = config.autoHideAnimationSpec,
         isDragEnabled = config.isDragEnabled,
     ) { layout ->
-        val topPadding = padding.calculateTopPadding().toPx()
-        val bottomPadding = padding.calculateBottomPadding().toPx()
-        val startPadding = padding.calculateStartPadding(layout.layoutDirection).toPx()
-        val endPadding = padding.calculateEndPadding(layout.layoutDirection).toPx()
+        val topPadding = config.padding.calculateTopPadding().toPx()
+        val bottomPadding = config.padding.calculateBottomPadding().toPx()
+        val startPadding = config.padding.calculateStartPadding(layout.layoutDirection).toPx()
+        val endPadding = config.padding.calculateEndPadding(layout.layoutDirection).toPx()
 
         val isLtr = layout.layoutDirection == LayoutDirection.Ltr
         val isVertical = layout.orientation == Orientation.Vertical
+        val barThicknessPx = config.barThickness.toPx()
 
         // Scroll indicator measurements
         val scrollbarLength =
             layout.calculateBarLength(topPadding, startPadding, bottomPadding, endPadding)
 
-        val indicatorThicknessPx = indicatorThickness.toPx()
+        val indicatorThicknessPx = config.indicatorThickness.toPx()
 
         val indicatorLength =
             layout.calculateIndicatorLength(
                 scrollbarLength,
-                minimumIndicatorLength.toPx(),
+                config.minimumIndicatorLength.toPx(),
+                config.maximumIndicatorLength.toPx(),
             )
 
-        val indicatorOffset = layout.calculateIndicatorOffset(scrollbarLength)
+        val indicatorOffset = layout.calculateIndicatorOffset(scrollbarLength, indicatorLength)
 
         val scrollIndicatorSize =
             if (isVertical) {
@@ -95,7 +93,7 @@ fun Modifier.scrollbar(
         val scrollIndicatorPosition =
             if (isVertical) {
                 Offset(
-                    x =
+                    x = (indicatorThicknessPx - barThicknessPx) / 2 +
                         if (isLtr) {
                             layout.viewPortCrossAxisLength - indicatorThicknessPx - endPadding
                         } else {
@@ -111,23 +109,22 @@ fun Modifier.scrollbar(
                         } else {
                             layout.viewPortLength - indicatorOffset - indicatorLength - endPadding
                         },
-                    y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding,
+                    y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding +
+                        (indicatorThicknessPx - barThicknessPx) / 2,
                 )
             }
 
         // Scroll bar measurements
-        val barThicknessPx = barThickness.toPx()
-
         val scrollbarPosition =
             if (isVertical) {
                 Offset(
-                    x = scrollIndicatorPosition.x + (indicatorThicknessPx - barThicknessPx) / 2,
+                    x = layout.viewPortCrossAxisLength - barThicknessPx - endPadding,
                     y = topPadding,
                 )
             } else {
                 Offset(
                     x = if (isLtr) startPadding else endPadding,
-                    y = scrollIndicatorPosition.y + (indicatorThicknessPx - barThicknessPx) / 2,
+                    y = layout.viewPortCrossAxisLength - barThicknessPx - bottomPadding,
                 )
             }
 
@@ -140,6 +137,7 @@ fun Modifier.scrollbar(
 
         val barBounds = Rect(scrollbarPosition, scrollbarSize)
         val indicatorBounds = Rect(scrollIndicatorPosition, scrollIndicatorSize)
+            .applyPadding(config.indicatorPadding, layout.layoutDirection)
 
         val measurements = ScrollbarMeasurements(barBounds, indicatorBounds, layout.scrollbarAlpha)
 
@@ -147,36 +145,63 @@ fun Modifier.scrollbar(
             onDraw(this, measurements)
         }
     }
-}
 
 fun DrawScope.drawDefaultScrollbar(
     measurements: ScrollbarMeasurements,
     config: ScrollbarConfig,
-) {
+) = with(config) {
     val barColor = config.barColor
+    val barBorderColor = config.barBorder.color
     val indicatorColor = config.indicatorColor
-    val barCornerRadius = config.barCornerRadius
-    val indicatorCornerRadius = config.indicatorCornerRadius
+    val indicatorBorderColor = config.indicatorBorder.color
 
     // Draw bar
-    if (barColor.alpha > 0) {
+    if (!barColor.isTransparent) {
+        val barCornerRadius = barCornerRadius.let { CornerRadius(it.toPx(), it.toPx()) }
+
         drawRoundRect(
-            color = barColor,
-            cornerRadius = CornerRadius(barCornerRadius.toPx(), barCornerRadius.toPx()),
+            paint = barColor,
+            cornerRadius = barCornerRadius,
             topLeft = measurements.barBounds.topLeft,
             size = measurements.barBounds.size,
             alpha = measurements.alpha,
         )
+
+        if (barBorder.width > 0.dp && !barBorderColor.isTransparent) {
+            val borderBounds = measurements.barBounds
+            drawRoundRect(
+                paint = barBorderColor,
+                cornerRadius = barCornerRadius,
+                topLeft = borderBounds.topLeft,
+                size = borderBounds.size,
+                alpha = measurements.alpha,
+                style = barBorder.toStroke(),
+            )
+        }
     }
 
     // Draw indicator
+    val indicatorCornerRadius = indicatorCornerRadius.let { CornerRadius(it.toPx(), it.toPx()) }
+
     drawRoundRect(
-        color = indicatorColor,
-        cornerRadius = indicatorCornerRadius.let { CornerRadius(it.toPx(), it.toPx()) },
+        paint = indicatorColor,
+        cornerRadius = indicatorCornerRadius,
         topLeft = measurements.indicatorBounds.topLeft,
         size = measurements.indicatorBounds.size,
         alpha = measurements.alpha,
     )
+
+    if (indicatorBorder.width > 0.dp && !indicatorBorderColor.isTransparent) {
+        val borderBounds = measurements.indicatorBounds
+        drawRoundRect(
+            paint = indicatorBorderColor,
+            cornerRadius = indicatorCornerRadius,
+            topLeft = borderBounds.topLeft,
+            size = borderBounds.size,
+            alpha = measurements.alpha,
+            style = indicatorBorder.toStroke(),
+        )
+    }
 }
 
 /**
@@ -210,7 +235,7 @@ fun Modifier.scrollbar(
     showAlways: Boolean = false,
     autoHideAnimationSpec: AnimationSpec<Float>? = null,
     isDragEnabled: Boolean = true,
-    onMeasureAndDraw: ScrollbarLayoutScope.(layout: ScrollbarLayout) -> Unit,
+    onMeasureAndDraw: ScrollbarMeasureAndDraw,
 ): Modifier =
     composed {
         val isScrollingOrPanning =
@@ -223,7 +248,7 @@ fun Modifier.scrollbar(
             if (showAlways) {
                 1f
             } else if (isScrollingOrPanning) {
-                0.8f
+                1f
             } else {
                 0f
             }
@@ -282,7 +307,7 @@ class DefaultScrollbarLayoutScope(
     override fun drawWithMeasurements(
         measurements: ScrollbarMeasurements,
         drawScrollbarAndIndicator: DrawScope.() -> Unit,
-    ) {
+    ): ScrollbarMeasurementResult {
         scrollbarState.indicatorBounds = measurements.indicatorBounds
         scrollbarState.barBounds = measurements.barBounds
 
@@ -294,5 +319,7 @@ class DefaultScrollbarLayoutScope(
             }
 
         drawScrollbarAndIndicator(drawScope)
+
+        return ScrollbarMeasurementResult()
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.unit.dp
+import com.shambu.compose.scrollbar.ColorType
 import com.shambu.compose.scrollbar.ScrollbarConfig
 import com.shambu.compose.scrollbar.rememberScrollbarState
 import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
@@ -30,7 +31,7 @@ fun VerticalScrollExample() {
                 scrollbarState,
                 scrollbarConfig = ScrollbarConfig(
                     indicatorThickness = 16.dp,
-                    indicatorColor = Color.Gray,
+                    indicatorColor = ColorType.Solid(Color.Gray),
                 ),
             ).fillMaxWidth()
             .requiredHeight(10000.dp)

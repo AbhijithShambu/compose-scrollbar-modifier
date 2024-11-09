@@ -14,15 +14,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +34,6 @@ fun AlbumCover(
     modifier: Modifier = Modifier,
 ) {
     val aspectRatio = 1.15f
-    val widthPx = with(LocalDensity.current) { width.toPx() }
 
     Box(
         modifier
@@ -59,54 +53,29 @@ fun AlbumCover(
         Box(
             Modifier
                 .align(Alignment.BottomEnd)
+                .shadow(4.dp)
+                .background(MaterialTheme.colors.surface)
                 .padding(8.dp)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.large),
+                .fillMaxWidth(),
         ) {
-            // Blur image
-            KamelImage(
-                resource = { asyncPainterResource(album.imageUrl) },
-                contentDescription = null,
-                contentScale =
-                    object : ContentScale {
-                        override fun computeScaleFactor(
-                            srcSize: Size,
-                            dstSize: Size,
-                        ): ScaleFactor {
-                            val scale = widthPx / srcSize.width
-                            return ScaleFactor(scale, scale)
-                        }
-                    },
-                alignment = Alignment.BottomCenter,
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .aspectRatio(aspectRatio)
-                        .blur(10.dp, BlurredEdgeTreatment.Unbounded)
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(Color.Black.copy(alpha = 0.25f))
-                        },
-            )
-
             Column(
-                Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
             ) {
                 Text(
                     album.title,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.semantics { contentDescription = "album_title" },
-                    color = Color.White,
+                    color = MaterialTheme.colors.onSurface,
                 )
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(2.dp))
 
                 Text(
                     album.description,
                     style = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.semantics { contentDescription = "album_artist" },
-                    color = Color.White,
+                    color = MaterialTheme.colors.onSurface,
                 )
             }
         }
