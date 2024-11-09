@@ -17,29 +17,33 @@ import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-context(Density)
 fun Rect.applyPadding(
+    density: Density,
     paddingValues: PaddingValues,
     layoutDirection: LayoutDirection,
 ): Rect =
-    Rect(
-        left = this.left + paddingValues.calculateLeftPadding(layoutDirection).toPx(),
-        top = this.top + paddingValues.calculateTopPadding().toPx(),
-        right = this.right - paddingValues.calculateRightPadding(layoutDirection).toPx(),
-        bottom = this.bottom - paddingValues.calculateBottomPadding().toPx(),
-    )
+    with(density) {
+        val rect = this@applyPadding
+        Rect(
+            left = rect.left + paddingValues.calculateLeftPadding(layoutDirection).toPx(),
+            top = rect.top + paddingValues.calculateTopPadding().toPx(),
+            right = rect.right - paddingValues.calculateRightPadding(layoutDirection).toPx(),
+            bottom = rect.bottom - paddingValues.calculateBottomPadding().toPx(),
+        )
+    }
 
 val ColorType.isTransparent get() = this is ColorType.Solid && color.alpha == 0f
 
-context(Density)
-internal fun BorderStyle.toStroke() =
-    Stroke(
-        width.toPx(),
-        miter?.toPx() ?: DefaultMiter,
-        cap,
-        join,
-        pathEffect,
-    )
+internal fun BorderStyle.toStroke(density: Density) =
+    with(density) {
+        Stroke(
+            width.toPx(),
+            miter?.toPx() ?: DefaultMiter,
+            cap,
+            join,
+            pathEffect,
+        )
+    }
 
 internal fun DrawScope.drawRoundRect(
     paint: ColorType,
