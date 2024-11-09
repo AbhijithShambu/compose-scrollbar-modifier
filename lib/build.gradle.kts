@@ -36,14 +36,6 @@ kotlin {
             implementation(libs.androidx.annotation.jvm)
         }
     }
-
-    targets.all {
-        compilations.all {
-            kotlinOptions {
-                freeCompilerArgs += "-Xcontext-receivers"
-            }
-        }
-    }
 }
 
 android {

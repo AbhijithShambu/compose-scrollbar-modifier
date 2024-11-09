@@ -137,7 +137,7 @@ fun Modifier.scrollbar(
 
         val barBounds = Rect(scrollbarPosition, scrollbarSize)
         val indicatorBounds = Rect(scrollIndicatorPosition, scrollIndicatorSize)
-            .applyPadding(config.indicatorPadding, layout.layoutDirection)
+            .applyPadding(this, config.indicatorPadding, layout.layoutDirection)
 
         val measurements = ScrollbarMeasurements(barBounds, indicatorBounds, layout.scrollbarAlpha)
 
@@ -175,7 +175,7 @@ fun DrawScope.drawDefaultScrollbar(
                 topLeft = borderBounds.topLeft,
                 size = borderBounds.size,
                 alpha = measurements.alpha,
-                style = barBorder.toStroke(),
+                style = barBorder.toStroke(this@drawDefaultScrollbar),
             )
         }
     }
@@ -199,7 +199,7 @@ fun DrawScope.drawDefaultScrollbar(
             topLeft = borderBounds.topLeft,
             size = borderBounds.size,
             alpha = measurements.alpha,
-            style = indicatorBorder.toStroke(),
+            style = indicatorBorder.toStroke(this@drawDefaultScrollbar),
         )
     }
 }
