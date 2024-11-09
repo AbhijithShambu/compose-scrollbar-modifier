@@ -75,7 +75,7 @@ mavenPublishing {
 
     pom {
         name.set(project.name)
-        description.set("Compose multiplatform library for displaying Scrollbar on Row or Column.")
+        description.set("Compose multiplatform library for displaying Scrollbar using modifer.")
         inceptionYear.set("2024")
         url.set("https://github.com/AbhijithShambu/compose-scrollbar-modifier")
         licenses {

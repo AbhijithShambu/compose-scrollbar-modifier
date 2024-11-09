@@ -70,51 +70,74 @@ fun VerticalScrollExample() {
     }
 }
 ```
-
 ## Customization Options
 
 The `ScrollbarConfig` class provides various options to customize the scrollbar appearance and behavior:
 
-```kotlin
-val scrollbarConfig = ScrollbarConfig(
-    indicatorThickness = 8.dp,
-    indicatorColor = Color.Gray.copy(alpha = 0.7f),
-    barThickness = 8.dp,
-    barColor = Color.LightGray.copy(alpha = 0.7f),
-    showAlways = true,
-    autoHideAnimationSpec = null,
-    padding = PaddingValues(all = 16.dp),
-    isDragEnabled = true
-)
-```
 
+### Available Configuration Options
 
-### Customized Scrollbar Example
-You can then pass this configuration when creating the scrollbar:
+- `indicatorThickness`: Thickness of the scrollbar indicator (thumb).
+- `indicatorCornerRadius`: Corner radius of the indicator.
+- `indicatorColor`: The color of the scrollbar indicator. Can be a solid color or a gradient defined by ColorType.
+- `indicatorBorder`: Border styling for the indicator.
+- `minimumIndicatorLength`: Minimum length of the scrollbar indicator.
+- `maximumIndicatorLength`: Maximum length of the scrollbar indicator. Prevents it from  growing too large on short content. Default is [Dp.Infinity], allowing the indicator to resize as needed.
+- `barThickness`: Thickness of the scrollbar track.
+- `barCornerRadius`: Corner radius of the track.
+- `barColor`: Color of the scrollbar track.  Can be a solid color or a gradient defined by ColorType.
+- `barBorder`: Border styling for the bar.
+- `showAlways`: Whether the scrollbar should always be visible. 
+     * If true, the scrollbar is always visible, even when not actively scrolling.
+     * Default is false, meaning the scrollbar will auto-hide when not in use.
+- `autoHideAnimationSpec`: Animation specification for auto-hiding the scrollbar. 
+     *  If null, a default auto-hide animation is used. Defines timing and easing for fading out the scrollbar.
+- `padding`: Padding around the scrollbar.
+- `indicatorPadding`: Padding around the indicator.
+- `isDragEnabled`: Determines if the scrollbar indicator is draggable. Default is true
 
-```kotlin
-@Composable
+### Usage Example
+
+```kotlin 
+@Composable 
 fun CustomizedScrollbarExample() {
     val scrollState = rememberScrollState()
     val scrollbarState = rememberScrollbarState()
 
-    val scrollbarConfig = ScrollbarConfig(
-        indicatorThickness = 16.dp,
-        indicatorColor = Color.Blue,
-        barThickness = 12.dp,
-        barColor = Color.LightBlue,
-        showAlways = false,
-        autoHideAnimationSpec = tween(300),
-        padding = PaddingValues(all = 8.dp),
-        isDragEnabled = true
-    )
+    val dynamicIndicatorThickness = 
+        if (scrollbarState.isScrollbarDragActive) 16.dp else 20.dp
+
+    val scrollbarConfig = 
+        ScrollbarConfig(
+            indicatorThickness = dynamicIndicatorThickness,
+            indicatorColor = ColorType.Solid(Color.Red),
+            indicatorBorder = BorderStyle(
+                color = ColorType.Gradient { bounds ->
+                    Brush.linearGradient(
+                        0f to Color(0xFFEDE6F2),
+                        1f to Color(0xFF8C4843),
+                        start = bounds.topLeft,
+                        end = bounds.bottomRight
+                    )
+                },
+                width = 2.dp
+            ),
+            barThickness = 16.dp,
+            barColor = ColorType.Solid(Color.White),
+            showAlways = false,
+            autoHideAnimationSpec = tween(300),
+            padding = PaddingValues(all = 8.dp),
+            indicatorPadding = PaddingValues(end = 4.dp),
+            isDragEnabled = true
+        )
+            
 
     Box(
         modifier = Modifier
             .verticalScrollWithScrollbar(
-               scrollState, 
-               scrollbarState, 
-               scrollbarConfig = scrollbarConfig
+                scrollState,
+                scrollbarState,
+                scrollbarConfig = scrollbarConfig,
             )
             .fillMaxWidth()
             .requiredHeight(10000.dp)
@@ -123,6 +146,9 @@ fun CustomizedScrollbarExample() {
     }
 }
 ```
+
+These customization options allow you to fine-tune the appearance and behavior of your scrollbars to match your app's design and requirements.
+
 
 ## Advanced Usage
 To custom draw scrollbar, 
