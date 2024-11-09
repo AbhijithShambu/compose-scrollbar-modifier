@@ -19,13 +19,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.shambu.compose.scrollbar.ColorType
 import com.shambu.compose.scrollbar.ScrollbarConfig
 import com.shambu.compose.scrollbar.ScrollbarState
 import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
@@ -36,8 +36,6 @@ import com.shambu.compose.scrollbar.sample.theme.AppTheme
 import com.shambu.compose.scrollbar.sample.ui.components.AlbumCover
 import com.shambu.compose.scrollbar.sample.ui.components.SongItem
 import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
-import kotlin.math.max
-import kotlin.math.min
 
 const val DARK_THEME = true
 val indicatorColor = Color(0xffB33951)
@@ -57,9 +55,10 @@ fun App() {
                     scrollbarConfig =
                         ScrollbarConfig(
                             padding = PaddingValues(end = 1.dp),
-                            indicatorColor = indicatorColor,
+                            indicatorColor = ColorType.Solid(indicatorColor),
                             indicatorThickness = 12.dp,
-                            barColor = barColor,
+                            indicatorPadding = PaddingValues(2.dp),
+                            barColor = ColorType.Solid(barColor),
                         ),
                 ).padding(vertical = 24.dp),
         ) {
@@ -154,51 +153,25 @@ fun Modifier.customScrollbar(
         scrollbarState,
         scrollbarConfig =
             ScrollbarConfig(
-                indicatorThickness = 16.dp,
+                indicatorThickness = 24.dp,
                 barThickness = 24.dp,
                 padding = PaddingValues(horizontal = 80.dp),
+                indicatorPadding = PaddingValues(4.dp),
+                indicatorColor = ColorType.Provider { indicatorBounds ->
+                    Brush.horizontalGradient()
+                    ColorType.Gradient(
+                        Brush.linearGradient(
+                            0f to indicatorColor,
+                            0.55f to Color(0xFFFFFF),
+                            1f to indicatorColor,
+                            start = indicatorBounds.topLeft,
+                            end = indicatorBounds.bottomRight,
+                        ),
+                    )
+                },
+                barColor = ColorType.Solid(barColor),
                 showAlways = true,
             ),
-        onDrawScrollbar = { measurements ->
-            val barCornerRadius = 12.dp
-            val indicatorCornerRadius = 8.dp
-
-            // Draw bar
-            if (barColor.alpha > 0) {
-                drawRoundRect(
-                    color = barColor,
-                    cornerRadius = CornerRadius(barCornerRadius.toPx(), barCornerRadius.toPx()),
-                    topLeft = measurements.barBounds.topLeft,
-                    size = measurements.barBounds.size,
-                    alpha = measurements.alpha,
-                )
-            }
-
-            // Draw indicator
-            val indicatorBrush = Brush.linearGradient(
-                0f to indicatorColor,
-                0.55f to Color(0xFFFFFF),
-                1f to indicatorColor,
-                start = measurements.indicatorBounds.topLeft,
-                end = measurements.indicatorBounds.bottomRight,
-            )
-
-            drawRoundRect(
-                brush = indicatorBrush,
-                cornerRadius = indicatorCornerRadius.let { CornerRadius(it.toPx(), it.toPx()) },
-                topLeft = measurements.indicatorBounds.topLeft.copy(
-                    x = min(
-                        max(
-                            measurements.indicatorBounds.topLeft.x,
-                            measurements.barBounds.topLeft.x + 5.dp.toPx(),
-                        ),
-                        measurements.barBounds.topRight.x - 5.dp.toPx() - measurements.indicatorBounds.width,
-                    ),
-                ),
-                size = measurements.indicatorBounds.size,
-                alpha = measurements.alpha,
-            )
-        },
     )
 
 expect fun getPlatformName(): String

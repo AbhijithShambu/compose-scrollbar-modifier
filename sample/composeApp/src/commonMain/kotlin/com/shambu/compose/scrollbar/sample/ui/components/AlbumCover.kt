@@ -90,7 +90,7 @@ fun AlbumCover(
             )
 
             Column(
-                Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
             ) {
                 Text(
                     album.title,
@@ -100,7 +100,7 @@ fun AlbumCover(
                     color = Color.White,
                 )
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(2.dp))
 
                 Text(
                     album.description,

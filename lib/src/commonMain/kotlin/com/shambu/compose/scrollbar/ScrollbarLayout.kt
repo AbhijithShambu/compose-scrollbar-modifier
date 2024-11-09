@@ -4,6 +4,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import kotlin.math.max
+import kotlin.math.min
 
 class ScrollbarLayout(
     val layoutDirection: LayoutDirection,
@@ -36,11 +37,17 @@ class ScrollbarLayout(
     fun calculateIndicatorLength(
         scrollbarLength: Float,
         minimumIndicatorLength: Float = 24f,
+        maximumIndicatorLength: Float = Float.MAX_VALUE,
     ): Float =
-        max(
-            (scrollbarLength / contentLength) * viewPortLength,
-            minimumIndicatorLength,
+        min(
+            max(calculateStandardIndicatorLength(scrollbarLength), minimumIndicatorLength),
+            maximumIndicatorLength,
         )
 
-    fun calculateIndicatorOffset(scrollbarLength: Float = viewPortLength): Float = (scrollbarLength / contentLength) * contentOffset
+    private fun calculateStandardIndicatorLength(scrollbarLength: Float): Float = (scrollbarLength / contentLength) * viewPortLength
+
+    fun calculateIndicatorOffset(
+        scrollbarLength: Float,
+        indicatorLength: Float,
+    ): Float = contentOffset * (scrollbarLength - indicatorLength) / (contentLength - viewPortLength)
 }
