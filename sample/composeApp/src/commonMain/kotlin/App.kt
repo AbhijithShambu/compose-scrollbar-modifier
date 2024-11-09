@@ -37,7 +37,7 @@ import com.shambu.compose.scrollbar.sample.ui.components.AlbumCover
 import com.shambu.compose.scrollbar.sample.ui.components.SongItem
 import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
 
-const val DARK_THEME = true
+const val DARK_THEME = false
 val indicatorColor = Color(0xffB33951)
 val barColor = Color(0xFFEEDDEE)
 
@@ -54,9 +54,10 @@ fun App() {
                     rememberScrollbarState(),
                     scrollbarConfig =
                         ScrollbarConfig(
-                            padding = PaddingValues(end = 1.dp),
+                            padding = PaddingValues(end = 5.dp, top = 8.dp),
                             indicatorColor = ColorType.Solid(indicatorColor),
-                            indicatorThickness = 12.dp,
+                            indicatorThickness = 16.dp,
+                            barThickness = 2.dp,
                             indicatorPadding = PaddingValues(2.dp),
                             barColor = ColorType.Solid(barColor),
                         ),

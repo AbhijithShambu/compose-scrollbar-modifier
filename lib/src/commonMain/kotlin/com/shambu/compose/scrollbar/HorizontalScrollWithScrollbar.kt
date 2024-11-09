@@ -89,7 +89,7 @@ fun Modifier.horizontalScrollWithScrollbar(
     alwaysShowScrollbar: Boolean = false,
     autoHideScrollbarAnimationSpec: AnimationSpec<Float>? = null,
     enableScrollbarDrag: Boolean = true,
-    onMeasureAndDrawScrollbar: ScrollbarLayoutScope.(layout: ScrollbarLayout) -> Unit,
+    onMeasureAndDrawScrollbar: ScrollbarMeasureAndDraw,
 ) = this
     .scrollbar(
         scrollState = scrollState,

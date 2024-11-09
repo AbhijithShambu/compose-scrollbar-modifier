@@ -66,6 +66,7 @@ fun Modifier.scrollbar(
 
         val isLtr = layout.layoutDirection == LayoutDirection.Ltr
         val isVertical = layout.orientation == Orientation.Vertical
+        val barThicknessPx = config.barThickness.toPx()
 
         // Scroll indicator measurements
         val scrollbarLength =
@@ -92,7 +93,7 @@ fun Modifier.scrollbar(
         val scrollIndicatorPosition =
             if (isVertical) {
                 Offset(
-                    x =
+                    x = (indicatorThicknessPx - barThicknessPx) / 2 +
                         if (isLtr) {
                             layout.viewPortCrossAxisLength - indicatorThicknessPx - endPadding
                         } else {
@@ -108,23 +109,22 @@ fun Modifier.scrollbar(
                         } else {
                             layout.viewPortLength - indicatorOffset - indicatorLength - endPadding
                         },
-                    y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding,
+                    y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding +
+                        (indicatorThicknessPx - barThicknessPx) / 2,
                 )
             }
 
         // Scroll bar measurements
-        val barThicknessPx = config.barThickness.toPx()
-
         val scrollbarPosition =
             if (isVertical) {
                 Offset(
-                    x = scrollIndicatorPosition.x + (indicatorThicknessPx - barThicknessPx) / 2,
+                    x = layout.viewPortCrossAxisLength - barThicknessPx - endPadding,
                     y = topPadding,
                 )
             } else {
                 Offset(
                     x = if (isLtr) startPadding else endPadding,
-                    y = scrollIndicatorPosition.y + (indicatorThicknessPx - barThicknessPx) / 2,
+                    y = layout.viewPortCrossAxisLength - barThicknessPx - bottomPadding,
                 )
             }
 
@@ -235,7 +235,7 @@ fun Modifier.scrollbar(
     showAlways: Boolean = false,
     autoHideAnimationSpec: AnimationSpec<Float>? = null,
     isDragEnabled: Boolean = true,
-    onMeasureAndDraw: ScrollbarLayoutScope.(layout: ScrollbarLayout) -> Unit,
+    onMeasureAndDraw: ScrollbarMeasureAndDraw,
 ): Modifier =
     composed {
         val isScrollingOrPanning =
@@ -248,7 +248,7 @@ fun Modifier.scrollbar(
             if (showAlways) {
                 1f
             } else if (isScrollingOrPanning) {
-                0.8f
+                1f
             } else {
                 0f
             }
@@ -307,7 +307,7 @@ class DefaultScrollbarLayoutScope(
     override fun drawWithMeasurements(
         measurements: ScrollbarMeasurements,
         drawScrollbarAndIndicator: DrawScope.() -> Unit,
-    ) {
+    ): ScrollbarMeasurementResult {
         scrollbarState.indicatorBounds = measurements.indicatorBounds
         scrollbarState.barBounds = measurements.barBounds
 
@@ -319,5 +319,7 @@ class DefaultScrollbarLayoutScope(
             }
 
         drawScrollbarAndIndicator(drawScope)
+
+        return ScrollbarMeasurementResult()
     }
 }
