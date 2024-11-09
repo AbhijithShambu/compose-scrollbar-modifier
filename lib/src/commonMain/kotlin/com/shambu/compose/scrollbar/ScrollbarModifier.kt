@@ -150,10 +150,10 @@ fun DrawScope.drawDefaultScrollbar(
     measurements: ScrollbarMeasurements,
     config: ScrollbarConfig,
 ) = with(config) {
-    val barColor = config.barColor.toStaticColor(measurements.barBounds)
-    val barBorderColor = config.barBorder.color.toStaticColor(measurements.barBounds)
-    val indicatorColor = config.indicatorColor.toStaticColor(measurements.indicatorBounds)
-    val indicatorBorderColor = config.indicatorBorder.color.toStaticColor(measurements.indicatorBounds)
+    val barColor = config.barColor
+    val barBorderColor = config.barBorder.color
+    val indicatorColor = config.indicatorColor
+    val indicatorBorderColor = config.indicatorBorder.color
 
     // Draw bar
     if (!barColor.isTransparent) {

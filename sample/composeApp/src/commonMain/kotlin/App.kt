@@ -157,16 +157,13 @@ fun Modifier.customScrollbar(
                 barThickness = 24.dp,
                 padding = PaddingValues(horizontal = 80.dp),
                 indicatorPadding = PaddingValues(4.dp),
-                indicatorColor = ColorType.Provider { indicatorBounds ->
-                    Brush.horizontalGradient()
-                    ColorType.Gradient(
-                        Brush.linearGradient(
-                            0f to indicatorColor,
-                            0.55f to Color(0xFFFFFF),
-                            1f to indicatorColor,
-                            start = indicatorBounds.topLeft,
-                            end = indicatorBounds.bottomRight,
-                        ),
+                indicatorColor = ColorType.Gradient { indicatorBounds ->
+                    Brush.linearGradient(
+                        0f to indicatorColor,
+                        0.55f to Color(0xFFFFFF),
+                        1f to indicatorColor,
+                        start = indicatorBounds.topLeft,
+                        end = indicatorBounds.bottomRight,
                     )
                 },
                 barColor = ColorType.Solid(barColor),

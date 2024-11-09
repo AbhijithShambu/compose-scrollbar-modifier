@@ -29,14 +29,7 @@ fun Rect.applyPadding(
         bottom = this.bottom - paddingValues.calculateBottomPadding().toPx(),
     )
 
-val StaticColor.isTransparent get() = this is ColorType.Solid && color.alpha == 0f
-
-fun ColorType.toStaticColor(rect: Rect): StaticColor =
-    when (this) {
-        is ColorType.Provider -> colorProvider(rect)
-        is ColorType.Solid -> this
-        is ColorType.Gradient -> this
-    }
+val ColorType.isTransparent get() = this is ColorType.Solid && color.alpha == 0f
 
 context(Density)
 internal fun BorderStyle.toStroke() =
@@ -49,7 +42,7 @@ internal fun BorderStyle.toStroke() =
     )
 
 internal fun DrawScope.drawRoundRect(
-    paint: StaticColor,
+    paint: ColorType,
     topLeft: Offset = Offset.Zero,
     size: Size = Size.Zero,
     cornerRadius: CornerRadius = CornerRadius.Zero,
@@ -73,7 +66,7 @@ internal fun DrawScope.drawRoundRect(
         }
         is ColorType.Gradient -> {
             drawRoundRect(
-                paint.brush,
+                paint.brush(Rect(topLeft, size)),
                 cornerRadius = cornerRadius,
                 topLeft = topLeft,
                 size = size,
