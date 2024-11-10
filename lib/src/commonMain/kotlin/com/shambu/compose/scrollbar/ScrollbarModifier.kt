@@ -16,6 +16,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
@@ -51,100 +53,101 @@ fun Modifier.scrollbar(
         drawDefaultScrollbar(measurements, config)
     },
 ): Modifier =
-    scrollbar(
-        scrollState = scrollState,
-        scrollbarState = scrollbarState,
-        direction = direction,
-        showAlways = config.showAlways,
-        autoHideAnimationSpec = config.autoHideAnimationSpec,
-        isDragEnabled = config.isDragEnabled,
-    ) { layout ->
-        val topPadding = config.padding.calculateTopPadding().toPx()
-        val bottomPadding = config.padding.calculateBottomPadding().toPx()
-        val startPadding = config.padding.calculateStartPadding(layout.layoutDirection).toPx()
-        val endPadding = config.padding.calculateEndPadding(layout.layoutDirection).toPx()
+    this then
+        scrollbar(
+            scrollState = scrollState,
+            scrollbarState = scrollbarState,
+            direction = direction,
+            showAlways = config.showAlways,
+            autoHideAnimationSpec = config.autoHideAnimationSpec,
+            isDragEnabled = config.isDragEnabled,
+        ) { layout ->
+            val topPadding = config.padding.calculateTopPadding().toPx()
+            val bottomPadding = config.padding.calculateBottomPadding().toPx()
+            val startPadding = config.padding.calculateStartPadding(layout.layoutDirection).toPx()
+            val endPadding = config.padding.calculateEndPadding(layout.layoutDirection).toPx()
 
-        val isLtr = layout.layoutDirection == LayoutDirection.Ltr
-        val isVertical = layout.orientation == Orientation.Vertical
-        val barThicknessPx = config.barThickness.toPx()
+            val isLtr = layout.layoutDirection == LayoutDirection.Ltr
+            val isVertical = layout.orientation == Orientation.Vertical
+            val barThicknessPx = config.barThickness.toPx()
 
-        // Scroll indicator measurements
-        val scrollbarLength =
-            layout.calculateBarLength(topPadding, startPadding, bottomPadding, endPadding)
+            // Scroll indicator measurements
+            val scrollbarLength =
+                layout.calculateBarLength(topPadding, startPadding, bottomPadding, endPadding)
 
-        val indicatorThicknessPx = config.indicatorThickness.toPx()
+            val indicatorThicknessPx = config.indicatorThickness.toPx()
 
-        val indicatorLength =
-            layout.calculateIndicatorLength(
-                scrollbarLength,
-                config.minimumIndicatorLength.toPx(),
-                config.maximumIndicatorLength.toPx(),
-            )
-
-        val indicatorOffset = layout.calculateIndicatorOffset(scrollbarLength, indicatorLength)
-
-        val scrollIndicatorSize =
-            if (isVertical) {
-                Size(indicatorThicknessPx, indicatorLength)
-            } else {
-                Size(indicatorLength, indicatorThicknessPx)
-            }
-
-        val scrollIndicatorPosition =
-            if (isVertical) {
-                Offset(
-                    x = (indicatorThicknessPx - barThicknessPx) / 2 +
-                        if (isLtr) {
-                            layout.viewPortCrossAxisLength - indicatorThicknessPx - endPadding
-                        } else {
-                            startPadding
-                        },
-                    y = indicatorOffset + topPadding,
+            val indicatorLength =
+                layout.calculateIndicatorLength(
+                    scrollbarLength,
+                    config.minimumIndicatorLength.toPx(),
+                    config.maximumIndicatorLength.toPx(),
                 )
-            } else {
-                Offset(
-                    x =
-                        if (isLtr) {
-                            indicatorOffset + startPadding
-                        } else {
-                            layout.viewPortLength - indicatorOffset - indicatorLength - endPadding
-                        },
-                    y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding +
-                        (indicatorThicknessPx - barThicknessPx) / 2,
-                )
+
+            val indicatorOffset = layout.calculateIndicatorOffset(scrollbarLength, indicatorLength)
+
+            val scrollIndicatorSize =
+                if (isVertical) {
+                    Size(indicatorThicknessPx, indicatorLength)
+                } else {
+                    Size(indicatorLength, indicatorThicknessPx)
+                }
+
+            val scrollIndicatorPosition =
+                if (isVertical) {
+                    Offset(
+                        x = (indicatorThicknessPx - barThicknessPx) / 2 +
+                            if (isLtr) {
+                                layout.viewPortCrossAxisLength - indicatorThicknessPx - endPadding
+                            } else {
+                                startPadding
+                            },
+                        y = indicatorOffset + topPadding,
+                    )
+                } else {
+                    Offset(
+                        x =
+                            if (isLtr) {
+                                indicatorOffset + startPadding
+                            } else {
+                                layout.viewPortLength - indicatorOffset - indicatorLength - endPadding
+                            },
+                        y = layout.viewPortCrossAxisLength - indicatorThicknessPx - bottomPadding +
+                            (indicatorThicknessPx - barThicknessPx) / 2,
+                    )
+                }
+
+            // Scroll bar measurements
+            val scrollbarPosition =
+                if (isVertical) {
+                    Offset(
+                        x = layout.viewPortCrossAxisLength - barThicknessPx - endPadding,
+                        y = topPadding,
+                    )
+                } else {
+                    Offset(
+                        x = if (isLtr) startPadding else endPadding,
+                        y = layout.viewPortCrossAxisLength - barThicknessPx - bottomPadding,
+                    )
+                }
+
+            val scrollbarSize =
+                if (isVertical) {
+                    Size(barThicknessPx, layout.viewPortLength - topPadding - bottomPadding)
+                } else {
+                    Size(layout.viewPortLength - startPadding - endPadding, barThicknessPx)
+                }
+
+            val barBounds = Rect(scrollbarPosition, scrollbarSize)
+            val indicatorBounds = Rect(scrollIndicatorPosition, scrollIndicatorSize)
+                .applyPadding(this, config.indicatorPadding, layout.layoutDirection)
+
+            val measurements = ScrollbarMeasurements(barBounds, indicatorBounds, layout.scrollbarAlpha)
+
+            drawWithMeasurements(measurements) {
+                onDraw(this, measurements)
             }
-
-        // Scroll bar measurements
-        val scrollbarPosition =
-            if (isVertical) {
-                Offset(
-                    x = layout.viewPortCrossAxisLength - barThicknessPx - endPadding,
-                    y = topPadding,
-                )
-            } else {
-                Offset(
-                    x = if (isLtr) startPadding else endPadding,
-                    y = layout.viewPortCrossAxisLength - barThicknessPx - bottomPadding,
-                )
-            }
-
-        val scrollbarSize =
-            if (isVertical) {
-                Size(barThicknessPx, layout.viewPortLength - topPadding - bottomPadding)
-            } else {
-                Size(layout.viewPortLength - startPadding - endPadding, barThicknessPx)
-            }
-
-        val barBounds = Rect(scrollbarPosition, scrollbarSize)
-        val indicatorBounds = Rect(scrollIndicatorPosition, scrollIndicatorSize)
-            .applyPadding(this, config.indicatorPadding, layout.layoutDirection)
-
-        val measurements = ScrollbarMeasurements(barBounds, indicatorBounds, layout.scrollbarAlpha)
-
-        drawWithMeasurements(measurements) {
-            onDraw(this, measurements)
         }
-    }
 
 fun DrawScope.drawDefaultScrollbar(
     measurements: ScrollbarMeasurements,
@@ -237,66 +240,80 @@ fun Modifier.scrollbar(
     isDragEnabled: Boolean = true,
     onMeasureAndDraw: ScrollbarMeasureAndDraw,
 ): Modifier =
-    composed {
-        val isScrollingOrPanning =
-            scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
-
-        val isVertical = direction == Orientation.Vertical
-        scrollbarState.isVertical = isVertical
-
-        val alpha =
-            if (showAlways) {
-                1f
-            } else if (isScrollingOrPanning) {
-                1f
-            } else {
-                0f
+    this then
+        composed(inspectorInfo = {
+            name = "scrollbar"
+            testTag("scrollbar")
+            debugInspectorInfo {
+                properties["barBounds"] = scrollbarState.barBounds
+                properties["indicatorBounds"] = scrollbarState.indicatorBounds
+                properties["indicatorOffset"] = scrollbarState.indicatorOffset
+                properties["direction"] = direction
+                properties["showAlways"] = showAlways
+                properties["isDragEnabled"] = isDragEnabled
+                properties["isDragging"] = scrollbarState.isScrollbarDragActive
+                properties["state"] = scrollbarState
             }
-        val alphaAnimationSpec = autoHideAnimationSpec ?: tween(
-            delayMillis = if (isScrollingOrPanning) 0 else 1500,
-            durationMillis = if (isScrollingOrPanning) 150 else 500,
-        )
+        }) {
+            val isScrollingOrPanning =
+                scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
 
-        val scrollbarAlpha by animateFloatAsState(
-            targetValue = alpha,
-            animationSpec = alphaAnimationSpec,
-        )
+            val isVertical = direction == Orientation.Vertical
+            scrollbarState.isVertical = isVertical
 
-        drawWithContent {
-            drawContent()
+            val alpha =
+                if (showAlways) {
+                    1f
+                } else if (isScrollingOrPanning) {
+                    1f
+                } else {
+                    0f
+                }
+            val alphaAnimationSpec = autoHideAnimationSpec ?: tween(
+                delayMillis = if (isScrollingOrPanning) 0 else 1500,
+                durationMillis = if (isScrollingOrPanning) 150 else 500,
+            )
 
-            val showScrollbar = isScrollingOrPanning || scrollbarAlpha > 0.0f
+            val scrollbarAlpha by animateFloatAsState(
+                targetValue = alpha,
+                animationSpec = alphaAnimationSpec,
+            )
 
-            // Draw scrollbar only if currently scrolling or if scroll animation is ongoing.
-            if (showScrollbar) {
-                val viewPortLength = if (isVertical) size.height else size.width
-                val viewPortCrossAxisLength = if (isVertical) size.width else size.height
-                val contentLength =
-                    max(
-                        viewPortLength + scrollState.maxValue,
-                        // To prevent divide by zero error
-                        0.001f,
+            drawWithContent {
+                drawContent()
+
+                val showScrollbar = isScrollingOrPanning || scrollbarAlpha > 0.0f
+
+                // Draw scrollbar only if currently scrolling or if scroll animation is ongoing.
+                if (showScrollbar) {
+                    val viewPortLength = if (isVertical) size.height else size.width
+                    val viewPortCrossAxisLength = if (isVertical) size.width else size.height
+                    val contentLength =
+                        max(
+                            viewPortLength + scrollState.maxValue,
+                            // To prevent divide by zero error
+                            0.001f,
+                        )
+                    scrollbarState.contentLength = contentLength
+
+                    val layout = ScrollbarLayout(
+                        layoutDirection = layoutDirection,
+                        orientation = direction,
+                        viewPortLength = viewPortLength,
+                        viewPortCrossAxisLength = viewPortCrossAxisLength,
+                        contentLength = contentLength,
+                        contentOffset = scrollState.value,
+                        scrollbarAlpha = scrollbarAlpha,
+                        density = density,
+                        fontScale = fontScale,
                     )
-                scrollbarState.contentLength = contentLength
 
-                val layout = ScrollbarLayout(
-                    layoutDirection = layoutDirection,
-                    orientation = direction,
-                    viewPortLength = viewPortLength,
-                    viewPortCrossAxisLength = viewPortCrossAxisLength,
-                    contentLength = contentLength,
-                    contentOffset = scrollState.value,
-                    scrollbarAlpha = scrollbarAlpha,
-                    density = density,
-                    fontScale = fontScale,
-                )
-
-                with(DefaultScrollbarLayoutScope(this, scrollbarState, density, fontScale)) {
-                    onMeasureAndDraw(layout)
+                    with(DefaultScrollbarLayoutScope(this, scrollbarState, density, fontScale)) {
+                        onMeasureAndDraw(layout)
+                    }
                 }
             }
-        }
-    }.scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)
+        }.scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)
 
 class DefaultScrollbarLayoutScope(
     private val drawScope: DrawScope,

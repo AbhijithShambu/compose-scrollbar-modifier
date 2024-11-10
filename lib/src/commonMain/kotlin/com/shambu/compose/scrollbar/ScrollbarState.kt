@@ -1,6 +1,7 @@
 package com.shambu.compose.scrollbar
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.ui.geometry.Size
  * Instance can be created using [rememberScrollbarState]
  * @See rememberScrollbarState
  */
+@Stable
 class ScrollbarState internal constructor() {
     var indicatorOffset by mutableFloatStateOf(0f)
         internal set

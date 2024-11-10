@@ -35,6 +35,20 @@ kotlin {
             implementation(compose.ui)
             implementation(libs.androidx.annotation.jvm)
         }
+
+        // Adds common test dependencies
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        // Adds the desktop test dependency
+        val desktopTest by getting
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
+        }
     }
 }
 
