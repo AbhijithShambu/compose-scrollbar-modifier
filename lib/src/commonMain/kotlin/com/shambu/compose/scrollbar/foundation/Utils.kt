@@ -1,4 +1,4 @@
-package com.shambu.compose.scrollbar
+package com.shambu.compose.scrollbar.foundation
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.PaddingValues

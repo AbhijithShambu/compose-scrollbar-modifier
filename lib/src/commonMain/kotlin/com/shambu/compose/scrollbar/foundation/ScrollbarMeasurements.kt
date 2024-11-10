@@ -1,4 +1,4 @@
-package com.shambu.compose.scrollbar
+package com.shambu.compose.scrollbar.foundation
 
 import androidx.compose.ui.geometry.Rect
 

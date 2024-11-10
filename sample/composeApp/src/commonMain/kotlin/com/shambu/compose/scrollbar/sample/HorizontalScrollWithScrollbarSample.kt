@@ -10,10 +10,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.unit.dp
-import com.shambu.compose.scrollbar.ColorType
-import com.shambu.compose.scrollbar.ScrollbarConfig
+import com.shambu.compose.scrollbar.foundation.ColorType
+import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
+import com.shambu.compose.scrollbar.foundation.rememberScrollbarState
 import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
-import com.shambu.compose.scrollbar.rememberScrollbarState
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 @Composable
