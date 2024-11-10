@@ -102,24 +102,7 @@ fun App() {
                 Spacer(Modifier.height(8.dp))
             }
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color(if (DARK_THEME) 0xFF0C051B else 0xFF7B506F))
-                    .padding(vertical = 16.dp)
-                    .customScrollbar(rememberScrollState(), rememberScrollbarState())
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 8.dp, bottom = 36.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                sampleAlbums.forEach { poster ->
-                    AlbumCover(
-                        poster,
-                        width = 260.dp,
-                        modifier = Modifier.shadow(6.dp, RoundedCornerShape(20.dp)),
-                    )
-                }
-            }
+            AlbumsCarousal()
             Spacer(Modifier.height(24.dp))
 
             Column(
@@ -141,6 +124,28 @@ fun App() {
                     SongItem(song, modifier = Modifier.shadow(1.dp, MaterialTheme.shapes.large))
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun AlbumsCarousal() {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .background(Color(if (DARK_THEME) 0xFF0C051B else 0xFF7B506F))
+            .padding(vertical = 16.dp)
+            .customScrollbar(rememberScrollState(), rememberScrollbarState())
+            .padding(horizontal = 24.dp)
+            .padding(top = 8.dp, bottom = 36.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        sampleAlbums.forEach { poster ->
+            AlbumCover(
+                poster,
+                width = 260.dp,
+                modifier = Modifier.shadow(6.dp, RoundedCornerShape(20.dp)),
+            )
         }
     }
 }
