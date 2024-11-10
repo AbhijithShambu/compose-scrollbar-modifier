@@ -1,4 +1,4 @@
-package com.shambu.compose.scrollbar
+package com.shambu.compose.scrollbar.foundation
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.foundation.layout.PaddingValues

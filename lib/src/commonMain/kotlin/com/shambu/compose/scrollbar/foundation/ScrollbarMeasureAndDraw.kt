@@ -1,4 +1,4 @@
-package com.shambu.compose.scrollbar
+package com.shambu.compose.scrollbar.foundation
 
 /**
  * A function that measures and draws the scrollbar based on the given layout configuration.

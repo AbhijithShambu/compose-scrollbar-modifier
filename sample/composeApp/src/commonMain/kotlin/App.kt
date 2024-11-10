@@ -25,11 +25,11 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shambu.compose.scrollbar.ColorType
-import com.shambu.compose.scrollbar.ScrollbarConfig
-import com.shambu.compose.scrollbar.ScrollbarState
+import com.shambu.compose.scrollbar.foundation.ColorType
+import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
+import com.shambu.compose.scrollbar.foundation.ScrollbarState
+import com.shambu.compose.scrollbar.foundation.rememberScrollbarState
 import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
-import com.shambu.compose.scrollbar.rememberScrollbarState
 import com.shambu.compose.scrollbar.sample.data.AlbumModel
 import com.shambu.compose.scrollbar.sample.data.SongModel
 import com.shambu.compose.scrollbar.sample.theme.AppTheme

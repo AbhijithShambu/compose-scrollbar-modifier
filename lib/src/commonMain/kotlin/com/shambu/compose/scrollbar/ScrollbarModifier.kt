@@ -20,6 +20,17 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
+import com.shambu.compose.scrollbar.foundation.ScrollbarLayout
+import com.shambu.compose.scrollbar.foundation.ScrollbarLayoutScope
+import com.shambu.compose.scrollbar.foundation.ScrollbarMeasureAndDraw
+import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurementResult
+import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurements
+import com.shambu.compose.scrollbar.foundation.ScrollbarState
+import com.shambu.compose.scrollbar.foundation.applyPadding
+import com.shambu.compose.scrollbar.foundation.drawRoundRect
+import com.shambu.compose.scrollbar.foundation.isTransparent
+import com.shambu.compose.scrollbar.foundation.toStroke
 import kotlin.math.max
 
 /**
@@ -243,6 +254,7 @@ fun Modifier.scrollbar(
     this then
         composed(inspectorInfo = {
             name = "scrollbar"
+
             testTag("scrollbar")
             debugInspectorInfo {
                 properties["barBounds"] = scrollbarState.barBounds
@@ -254,6 +266,14 @@ fun Modifier.scrollbar(
                 properties["isDragging"] = scrollbarState.isScrollbarDragActive
                 properties["state"] = scrollbarState
             }
+            properties["barBounds"] = scrollbarState.barBounds
+            properties["indicatorBounds"] = scrollbarState.indicatorBounds
+            properties["indicatorOffset"] = scrollbarState.indicatorOffset
+            properties["direction"] = direction
+            properties["showAlways"] = showAlways
+            properties["isDragEnabled"] = isDragEnabled
+            properties["isDragging"] = scrollbarState.isScrollbarDragActive
+            properties["state"] = scrollbarState
         }) {
             val isScrollingOrPanning =
                 scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive

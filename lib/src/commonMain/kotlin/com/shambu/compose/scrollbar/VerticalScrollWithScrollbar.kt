@@ -9,6 +9,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
+import com.shambu.compose.scrollbar.foundation.ScrollbarMeasureAndDraw
+import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurements
+import com.shambu.compose.scrollbar.foundation.ScrollbarState
 
 /**
  * Modify element to allow to scroll vertically when height of the content is bigger than max

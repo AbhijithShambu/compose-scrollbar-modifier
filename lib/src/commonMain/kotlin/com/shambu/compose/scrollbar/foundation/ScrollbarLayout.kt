@@ -1,4 +1,4 @@
-package com.shambu.compose.scrollbar
+package com.shambu.compose.scrollbar.foundation
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.ui.unit.Density

@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
+import com.shambu.compose.scrollbar.foundation.ScrollbarState
 
 // Only for Debugging
 private const val IS_DEBUG_MODE = false
