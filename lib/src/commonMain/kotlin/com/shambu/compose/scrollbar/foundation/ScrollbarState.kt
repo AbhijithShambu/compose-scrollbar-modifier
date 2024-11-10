@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import kotlin.math.roundToInt
 
 /**
  * State for managing the scrollbar's properties and activity.
@@ -41,8 +42,12 @@ class ScrollbarState internal constructor() {
 
     var contentLength: Float = 0f
         internal set
+    var viewPortLength: Float = 0f
+        internal set
 
     internal var isVertical: Boolean = true
+    internal var scrollTo: suspend (value: Int) -> Float = { 0f }
+    internal var scrollBy: suspend (value: Float) -> Float = { 0f }
 
     val indicatorLength: Float get() =
         if (isVertical) {
@@ -59,6 +64,32 @@ class ScrollbarState internal constructor() {
         left = barBounds.left - 16,
         right = barBounds.right + 16,
     )
+
+    suspend fun dragTo(indicatorOffset: Float): Float = scrollTo(getContentOffset(indicatorOffset).roundToInt())
+
+    suspend fun dragBy(indicatorOffset: Float): Float = scrollBy(getContentOffset(indicatorOffset))
+
+    private fun getContentOffset(indicatorOffset: Float): Float {
+        val barAndIndicatorLengthDiff = barLength - indicatorLength
+
+        return if (barAndIndicatorLengthDiff > 0) {
+            indicatorOffset * (contentLength - viewPortLength) / (barLength - indicatorLength)
+        } else {
+            0f
+        }
+    }
+
+    override fun toString(): String =
+        "ScrollbarState(" +
+            "indicatorOffset=$indicatorOffset, " +
+            "isScrollbarDragActive=$isScrollbarDragActive, " +
+            "barBounds=$barBounds, " +
+            "indicatorBounds=$indicatorBounds, " +
+            "indicatorLength=$indicatorLength, " +
+            "barLength=$barLength, " +
+            "contentLength=$contentLength, " +
+            "dragBounds=$dragBounds" +
+            ")"
 }
 
 /**
