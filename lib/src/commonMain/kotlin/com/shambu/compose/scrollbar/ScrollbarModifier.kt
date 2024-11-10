@@ -1,10 +1,12 @@
 package com.shambu.compose.scrollbar
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.getValue
@@ -15,9 +17,17 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.node.DrawModifierNode
+import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.node.ObserverModifierNode
+import androidx.compose.ui.node.SemanticsModifierNode
+import androidx.compose.ui.node.observeReads
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
@@ -26,11 +36,13 @@ import com.shambu.compose.scrollbar.foundation.ScrollbarLayoutScope
 import com.shambu.compose.scrollbar.foundation.ScrollbarMeasureAndDraw
 import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurementResult
 import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurements
+import com.shambu.compose.scrollbar.foundation.ScrollbarSemanticProperties
 import com.shambu.compose.scrollbar.foundation.ScrollbarState
 import com.shambu.compose.scrollbar.foundation.applyPadding
 import com.shambu.compose.scrollbar.foundation.drawRoundRect
 import com.shambu.compose.scrollbar.foundation.isTransparent
 import com.shambu.compose.scrollbar.foundation.toStroke
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 /**
@@ -251,37 +263,108 @@ fun Modifier.scrollbar(
     isDragEnabled: Boolean = true,
     onMeasureAndDraw: ScrollbarMeasureAndDraw,
 ): Modifier =
-    this then
-        composed(inspectorInfo = {
-            name = "scrollbar"
+    this then ScrollbarModifierNodeElement(
+        scrollState = scrollState,
+        scrollbarState = scrollbarState,
+        direction = direction,
+        showAlways = showAlways,
+        autoHideAnimationSpec = autoHideAnimationSpec,
+        onMeasureAndDraw = onMeasureAndDraw,
+    ).scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)
 
-            testTag("scrollbar")
-            debugInspectorInfo {
-                properties["barBounds"] = scrollbarState.barBounds
-                properties["indicatorBounds"] = scrollbarState.indicatorBounds
-                properties["indicatorOffset"] = scrollbarState.indicatorOffset
-                properties["direction"] = direction
-                properties["showAlways"] = showAlways
-                properties["isDragEnabled"] = isDragEnabled
-                properties["isDragging"] = scrollbarState.isScrollbarDragActive
-                properties["state"] = scrollbarState
-            }
-            properties["barBounds"] = scrollbarState.barBounds
-            properties["indicatorBounds"] = scrollbarState.indicatorBounds
-            properties["indicatorOffset"] = scrollbarState.indicatorOffset
-            properties["direction"] = direction
-            properties["showAlways"] = showAlways
-            properties["isDragEnabled"] = isDragEnabled
-            properties["isDragging"] = scrollbarState.isScrollbarDragActive
-            properties["state"] = scrollbarState
-        }) {
-            val isScrollingOrPanning =
-                scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
+private data class ScrollbarModifierNodeElement(
+    val scrollState: ScrollState,
+    val scrollbarState: ScrollbarState,
+    val direction: Orientation,
+    val showAlways: Boolean = false,
+    val autoHideAnimationSpec: AnimationSpec<Float>? = null,
+    val onMeasureAndDraw: ScrollbarMeasureAndDraw,
+) : ModifierNodeElement<ScrollbarModifierNode>() {
+    override fun create(): ScrollbarModifierNode =
+        ScrollbarModifierNode(
+            scrollState = scrollState,
+            scrollbarState = scrollbarState,
+            direction = direction,
+            showAlways = showAlways,
+            autoHideAnimationSpec = autoHideAnimationSpec,
+            onMeasureAndDraw = onMeasureAndDraw,
+        )
 
-            val isVertical = direction == Orientation.Vertical
+    override fun update(node: ScrollbarModifierNode) {
+        node.scrollState = scrollState
+        node.scrollbarState = scrollbarState
+        node.direction = direction
+        node.showAlways = showAlways
+        node.autoHideAnimationSpec = autoHideAnimationSpec
+        node.onMeasureAndDraw = onMeasureAndDraw
+    }
+
+    override fun equals(other: Any?): Boolean {
+        val otherElement = other as? ScrollbarModifierNodeElement ?: return false
+        return scrollState == otherElement.scrollState &&
+            scrollbarState == otherElement.scrollbarState &&
+            direction == otherElement.direction &&
+            showAlways == otherElement.showAlways &&
+            autoHideAnimationSpec == otherElement.autoHideAnimationSpec &&
+            onMeasureAndDraw == other.onMeasureAndDraw
+    }
+
+    override fun hashCode(): Int {
+        var result = scrollState.hashCode()
+        result = 31 * result + scrollbarState.hashCode()
+        result = 31 * result + direction.hashCode()
+        result = 31 * result + showAlways.hashCode()
+        result = 31 * result + autoHideAnimationSpec.hashCode()
+        result = 31 * result + onMeasureAndDraw.hashCode()
+        return result
+    }
+}
+
+private class ScrollbarModifierNode(
+    var scrollState: ScrollState,
+    var scrollbarState: ScrollbarState,
+    direction: Orientation,
+    var showAlways: Boolean = false,
+    var autoHideAnimationSpec: AnimationSpec<Float>? = null,
+    var onMeasureAndDraw: ScrollbarMeasureAndDraw,
+) : Modifier.Node(),
+    DrawModifierNode,
+    SemanticsModifierNode,
+    ObserverModifierNode {
+    var direction: Orientation = direction
+        set(value) {
+            field = value
             scrollbarState.isVertical = isVertical
+        }
 
-            val alpha =
+    val isScrollingOrPanning get() =
+        scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
+
+    val isVertical get() = direction == Orientation.Vertical
+
+    private val alpha = Animatable(1f)
+
+    override fun onAttach() {
+        animateAlpha()
+        observeReads { isScrollingOrPanning }
+        observeReads { showAlways }
+
+        scrollbarState.scrollTo = scrollState::scrollTo
+        scrollbarState.scrollBy = scrollState::scrollBy
+    }
+
+    override fun onObservedReadsChanged() {
+        animateAlpha()
+    }
+
+    private fun animateAlpha() {
+        coroutineScope.launch {
+            val animationSpec = autoHideAnimationSpec ?: tween(
+                delayMillis = if (isScrollingOrPanning) 0 else 1500,
+                durationMillis = if (isScrollingOrPanning) 150 else 500,
+            )
+
+            val targetAlpha =
                 if (showAlways) {
                     1f
                 } else if (isScrollingOrPanning) {
@@ -289,51 +372,68 @@ fun Modifier.scrollbar(
                 } else {
                     0f
                 }
-            val alphaAnimationSpec = autoHideAnimationSpec ?: tween(
-                delayMillis = if (isScrollingOrPanning) 0 else 1500,
-                durationMillis = if (isScrollingOrPanning) 150 else 500,
+
+            alpha.animateTo(targetAlpha, animationSpec)
+        }
+    }
+
+    override fun ContentDrawScope.draw() {
+        drawContent()
+
+        val showScrollbar = isScrollingOrPanning || alpha.value > 0.0f
+
+        // Draw scrollbar only if currently scrolling or if scroll animation is ongoing.
+        if (showScrollbar) {
+            val viewPortLength = if (isVertical) size.height else size.width
+            val viewPortCrossAxisLength = if (isVertical) size.width else size.height
+            val contentLength =
+                max(
+                    viewPortLength + scrollState.maxValue,
+                    // To prevent divide by zero error
+                    0.001f,
+                )
+            scrollbarState.isVertical = isVertical
+            scrollbarState.contentLength = contentLength
+            scrollbarState.viewPortLength = viewPortLength
+
+            val layout = ScrollbarLayout(
+                layoutDirection = layoutDirection,
+                orientation = direction,
+                viewPortLength = viewPortLength,
+                viewPortCrossAxisLength = viewPortCrossAxisLength,
+                contentLength = contentLength,
+                contentOffset = scrollState.value,
+                scrollbarAlpha = alpha.value,
+                density = density,
+                fontScale = fontScale,
             )
 
-            val scrollbarAlpha by animateFloatAsState(
-                targetValue = alpha,
-                animationSpec = alphaAnimationSpec,
-            )
-
-            drawWithContent {
-                drawContent()
-
-                val showScrollbar = isScrollingOrPanning || scrollbarAlpha > 0.0f
-
-                // Draw scrollbar only if currently scrolling or if scroll animation is ongoing.
-                if (showScrollbar) {
-                    val viewPortLength = if (isVertical) size.height else size.width
-                    val viewPortCrossAxisLength = if (isVertical) size.width else size.height
-                    val contentLength =
-                        max(
-                            viewPortLength + scrollState.maxValue,
-                            // To prevent divide by zero error
-                            0.001f,
-                        )
-                    scrollbarState.contentLength = contentLength
-
-                    val layout = ScrollbarLayout(
-                        layoutDirection = layoutDirection,
-                        orientation = direction,
-                        viewPortLength = viewPortLength,
-                        viewPortCrossAxisLength = viewPortCrossAxisLength,
-                        contentLength = contentLength,
-                        contentOffset = scrollState.value,
-                        scrollbarAlpha = scrollbarAlpha,
-                        density = density,
-                        fontScale = fontScale,
-                    )
-
-                    with(DefaultScrollbarLayoutScope(this, scrollbarState, density, fontScale)) {
-                        onMeasureAndDraw(layout)
-                    }
-                }
+            with(DefaultScrollbarLayoutScope(this, scrollbarState, density, fontScale)) {
+                onMeasureAndDraw(layout)
             }
-        }.scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)
+        }
+    }
+
+    override fun SemanticsPropertyReceiver.applySemantics() {
+        testTag = "scrollbar"
+        debugInspectorInfo {
+            properties[ScrollbarSemanticProperties.Keys.BAR_BOUNDS] = scrollbarState.barBounds
+            properties[ScrollbarSemanticProperties.Keys.INDICATOR_BOUNDS] = scrollbarState.indicatorBounds
+            properties[ScrollbarSemanticProperties.Keys.INDICATOR_OFFSET] = scrollbarState.indicatorOffset
+            properties[ScrollbarSemanticProperties.Keys.DIRECTION] = direction
+            properties[ScrollbarSemanticProperties.Keys.SHOW_ALWAYS] = showAlways
+            properties[ScrollbarSemanticProperties.Keys.IS_DRAGGING] = scrollbarState.isScrollbarDragActive
+            properties[ScrollbarSemanticProperties.Keys.STATE] = scrollbarState
+        }
+        set(ScrollbarSemanticProperties.State, scrollbarState)
+        set(ScrollbarSemanticProperties.BarBounds, scrollbarState.barBounds)
+        set(ScrollbarSemanticProperties.IndicatorBounds, scrollbarState.indicatorBounds)
+        set(ScrollbarSemanticProperties.IndicatorOffset, scrollbarState.indicatorOffset)
+        set(ScrollbarSemanticProperties.Direction, direction)
+        set(ScrollbarSemanticProperties.ShowAlways, showAlways)
+        set(ScrollbarSemanticProperties.IsDragging, scrollbarState.isScrollbarDragActive)
+    }
+}
 
 class DefaultScrollbarLayoutScope(
     private val drawScope: DrawScope,
@@ -350,9 +450,9 @@ class DefaultScrollbarLayoutScope(
 
         scrollbarState.indicatorOffset =
             if (scrollbarState.isVertical) {
-                measurements.indicatorBounds.topLeft.y
+                measurements.indicatorBounds.topLeft.y - measurements.barBounds.topLeft.y
             } else {
-                measurements.indicatorBounds.topLeft.x
+                measurements.indicatorBounds.topLeft.x - measurements.barBounds.topLeft.x
             }
 
         drawScrollbarAndIndicator(drawScope)
@@ -360,3 +460,86 @@ class DefaultScrollbarLayoutScope(
         return ScrollbarMeasurementResult()
     }
 }
+
+private fun Modifier.scrollbarOld(
+    scrollState: ScrollState,
+    scrollbarState: ScrollbarState,
+    direction: Orientation,
+    showAlways: Boolean = false,
+    autoHideAnimationSpec: AnimationSpec<Float>? = null,
+    isDragEnabled: Boolean = true,
+    onMeasureAndDraw: ScrollbarMeasureAndDraw,
+): Modifier =
+    composed(inspectorInfo = {
+        name = "scrollbar"
+        testTag("scrollbar")
+        properties[ScrollbarSemanticProperties.Keys.BAR_BOUNDS] = scrollbarState.barBounds
+        properties[ScrollbarSemanticProperties.Keys.INDICATOR_BOUNDS] = scrollbarState.indicatorBounds
+        properties[ScrollbarSemanticProperties.Keys.INDICATOR_OFFSET] = scrollbarState.indicatorOffset
+        properties[ScrollbarSemanticProperties.Keys.DIRECTION] = direction
+        properties[ScrollbarSemanticProperties.Keys.SHOW_ALWAYS] = showAlways
+        properties[ScrollbarSemanticProperties.Keys.IS_DRAGGING] = scrollbarState.isScrollbarDragActive
+        properties[ScrollbarSemanticProperties.Keys.STATE] = scrollbarState
+    }) {
+        val isScrollingOrPanning =
+            scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
+
+        val isVertical = direction == Orientation.Vertical
+        scrollbarState.isVertical = isVertical
+        scrollbarState.scrollTo = scrollState::scrollTo
+        scrollbarState.scrollBy = scrollState::scrollBy
+
+        val alpha =
+            if (showAlways) {
+                1f
+            } else if (isScrollingOrPanning) {
+                1f
+            } else {
+                0f
+            }
+        val alphaAnimationSpec = autoHideAnimationSpec ?: tween(
+            delayMillis = if (isScrollingOrPanning) 0 else 1500,
+            durationMillis = if (isScrollingOrPanning) 150 else 500,
+        )
+
+        val scrollbarAlpha by animateFloatAsState(
+            targetValue = alpha,
+            animationSpec = alphaAnimationSpec,
+        )
+
+        drawWithContent {
+            drawContent()
+
+            val showScrollbar = isScrollingOrPanning || scrollbarAlpha > 0.0f
+
+            // Draw scrollbar only if currently scrolling or if scroll animation is ongoing.
+            if (showScrollbar) {
+                val viewPortLength = if (isVertical) size.height else size.width
+                val viewPortCrossAxisLength = if (isVertical) size.width else size.height
+                val contentLength =
+                    max(
+                        viewPortLength + scrollState.maxValue,
+                        // To prevent divide by zero error
+                        0.001f,
+                    )
+                scrollbarState.contentLength = contentLength
+                scrollbarState.viewPortLength = viewPortLength
+
+                val layout = ScrollbarLayout(
+                    layoutDirection = layoutDirection,
+                    orientation = direction,
+                    viewPortLength = viewPortLength,
+                    viewPortCrossAxisLength = viewPortCrossAxisLength,
+                    contentLength = contentLength,
+                    contentOffset = scrollState.value,
+                    scrollbarAlpha = scrollbarAlpha,
+                    density = density,
+                    fontScale = fontScale,
+                )
+
+                with(DefaultScrollbarLayoutScope(this, scrollbarState, density, fontScale)) {
+                    onMeasureAndDraw(layout)
+                }
+            }
+        }
+    }.scrollbarDrag(scrollState, scrollbarState, direction, isDragEnabled)

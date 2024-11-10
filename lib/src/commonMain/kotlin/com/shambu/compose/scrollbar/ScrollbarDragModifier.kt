@@ -4,7 +4,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import androidx.compose.ui.input.pointer.positionChange
 import com.shambu.compose.scrollbar.foundation.ScrollbarState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * ***(For internal use only)***
@@ -67,23 +65,13 @@ internal fun Modifier.scrollbarDrag(
                     val initialBarOffset =
                         firstPositionLength - (scrollbarState.indicatorLength / 2) - startBoundsPosition
 
-                    val getContentOffset = { indicatorOffset: Float ->
-                        val barLength = scrollbarState.barLength
-                        val indicatorLength = scrollbarState.indicatorLength
-                        val contentLength = scrollbarState.contentLength
-                        val viewPortLength = if (isVertical) size.height else size.width
-
-                        indicatorOffset * (contentLength - viewPortLength) / (barLength - indicatorLength)
-                    }
-
                     val shouldScrollToInitialPosition =
                         !scrollbarState.indicatorBounds.contains(firstPosition)
 
                     val scrollToInitialPosition =
                         suspend {
                             // Scroll to initial position
-                            val initialContentOffset = getContentOffset(initialBarOffset).roundToInt()
-                            scrollState.scrollTo(initialContentOffset)
+                            scrollbarState.dragTo(initialBarOffset)
                         }
 
                     if (shouldScrollToInitialPosition) {
@@ -112,7 +100,7 @@ internal fun Modifier.scrollbarDrag(
                             val updatedBarOffset = if (isVertical) panChange.y else panChange.x
                             coroutineScope.launch {
                                 // Panning
-                                scrollState.scrollBy(getContentOffset(updatedBarOffset))
+                                scrollbarState.dragBy(updatedBarOffset)
                             }
                             event.changes.forEach { it.consume() } // Consume the change to avoid interference
                         }
