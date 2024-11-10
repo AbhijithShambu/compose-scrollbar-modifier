@@ -41,7 +41,8 @@ kotlin {
             implementation(libs.kamel.image)
             api(project(":lib"))
         }
-        jvmMain.dependencies {
+        val desktopMain by getting
+        desktopMain.dependencies {
             implementation(compose.desktop.common)
         }
         androidMain.dependencies {
