@@ -3,3 +3,4 @@ $dokka.linkExtension:html
 $dokka.location:////PointingToDeclaration/lib/[root].html
 module:lib
 com.shambu.compose.scrollbar
+com.shambu.compose.scrollbar.foundation

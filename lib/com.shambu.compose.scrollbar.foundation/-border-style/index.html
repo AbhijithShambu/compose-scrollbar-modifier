@@ -1,0 +1,194 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>BorderStyle</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            compose-scrollbar-modifier
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":lib:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="lib::com.shambu.compose.scrollbar.foundation/BorderStyle///PointingToDeclaration//873988736">
+  <div class="breadcrumbs"><a href="../../index.html">lib</a><span class="delimiter">/</span><a href="../index.html">com.shambu.compose.scrollbar.foundation</a><span class="delimiter">/</span><span class="current">BorderStyle</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Border</span><wbr><span><span>Style</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">BorderStyle</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>color<span class="token operator">: </span><a href="../-color-type/index.html">ColorType</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>width<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>miter<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>cap<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.html">StrokeCap</a><span class="token operator"> = </span>DefaultCap<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>join<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeJoin.html">StrokeJoin</a><span class="token operator"> = </span>DefaultJoin<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>pathEffect<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect.html">PathEffect</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div><p class="paragraph">BorderStyle provides information for drawing border</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>color</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Configure the color of the border. Color can be solid color or gradient</p></div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>width</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Configure the width of the stroke in Dp</p></div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>miter</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Set the border stroke miter value. This is used to control the behavior of miter joins when the joins angle is sharp. This value must be &gt;= 0.dp</p></div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>cap</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Return the paint's Cap, controlling how the start and end of stroked lines and paths are treated. The default is <a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.Companion.html#butt">StrokeCap.Butt</a></p></div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>join</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Set's the treatment where lines and curve segments join on a stroked path. The default is <a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeJoin.Companion.html#miter">StrokeJoin.Miter</a></p></div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>path</span><wbr><span><span>Effect</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Effect to apply to the stroke, null indicates a solid stroke line is to be drawn</p></div></div></div></div></div><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-color-type/index.html"><span>Color</span><wbr><span><span>Type</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.html"><span>Stroke</span><wbr><span><span>Cap</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeJoin.html"><span>Stroke</span><wbr><span><span>Join</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect.html"><span>Path</span><wbr><span><span>Effect</span></span></a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1940172015%2FConstructors%2F873988736" anchor-label="BorderStyle" id="1940172015%2FConstructors%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-border-style.html"><span>Border</span><wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1940172015%2FConstructors%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">color<span class="token operator">: </span><a href="../-color-type/index.html">ColorType</a><span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a><span class="token punctuation">, </span></span><span class="parameter ">miter<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">cap<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.html">StrokeCap</a><span class="token operator"> = </span>DefaultCap<span class="token punctuation">, </span></span><span class="parameter ">join<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeJoin.html">StrokeJoin</a><span class="token operator"> = </span>DefaultJoin<span class="token punctuation">, </span></span><span class="parameter ">pathEffect<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect.html">PathEffect</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1875734048%2FProperties%2F873988736" anchor-label="cap" id="1875734048%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="cap.html"><span><span>cap</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1875734048%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="cap.html">cap</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.html">StrokeCap</a></div><div class="brief "><p class="paragraph">Styles to use for line endings. See <a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeCap.html">StrokeCap</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-175371665%2FProperties%2F873988736" anchor-label="color" id="-175371665%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="color.html"><span><span>color</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-175371665%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="color.html">color</a><span class="token operator">: </span><a href="../-color-type/index.html">ColorType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1721561474%2FProperties%2F873988736" anchor-label="join" id="-1721561474%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="join.html"><span><span>join</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1721561474%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="join.html">join</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/StrokeJoin.html">StrokeJoin</a></div><div class="brief "><p class="paragraph">Styles to use for line joins.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1305016077%2FProperties%2F873988736" anchor-label="miter" id="1305016077%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="miter.html"><span><span>miter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1305016077%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="miter.html">miter</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a><span class="token operator">?</span><span class="token operator"> = </span>null</div><div class="brief "><p class="paragraph">Set the border stroke miter value.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1684276946%2FProperties%2F873988736" anchor-label="pathEffect" id="1684276946%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="path-effect.html"><span>path</span><wbr><span><span>Effect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1684276946%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="path-effect.html">pathEffect</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect.html">PathEffect</a><span class="token operator">?</span><span class="token operator"> = </span>null</div><div class="brief "><p class="paragraph">Effect applied to the geometry of a drawing primitive. For example, this can be used to draw shapes as a dashed or shaped pattern, or apply a treatment around line segment intersections. See <a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect.html">PathEffect</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1866862228%2FProperties%2F873988736" anchor-label="width" id="-1866862228%2FProperties%2F873988736" data-filterable-set=":lib:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":lib:dokkaHtmlPartial/commonMain" data-filterable-set=":lib:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="width.html"><span><span>width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1866862228%2FProperties%2F873988736"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":lib:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="width.html">width</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/unit/Dp.html">Dp</a></div><div class="brief "><p class="paragraph">To configure the width of the border in Dp</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
