@@ -11,6 +11,7 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.3"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
+assertk = "0.28.1"
 compose-multiplatform = "1.7.0"
 compose-tooling = "1.7.5"
 kamelImage = "1.0.0"
@@ -22,6 +23,7 @@ maven-publish = "0.25.3"
 annotationJvm = "1.9.1"
 
 [libraries]
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

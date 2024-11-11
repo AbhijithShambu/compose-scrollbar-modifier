@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package com.shambu.compose.scrollbar
 
 import androidx.compose.foundation.layout.Box
@@ -11,16 +13,16 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isZero
 import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
 import com.shambu.compose.scrollbar.foundation.ScrollbarSemanticProperties
 import com.shambu.compose.scrollbar.foundation.rememberScrollbarState
 import kotlinx.coroutines.delay
-import kotlin.math.roundToInt
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class ScrollbarModifierTest {
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun scrollWithScrollbar_existsAndOffsetIsZero_test() =
         runComposeUiTest {
@@ -34,15 +36,12 @@ class ScrollbarModifierTest {
                 )
             }
 
-            // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
             val node = onNodeWithTag("scrollbar")
             node.assertExists()
             val indicatorOffset = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IndicatorOffset]
-            println("Expected: 0, Actual: $indicatorOffset")
-            assertTrue { indicatorOffset == 0f }
+            assertThat(indicatorOffset).isZero()
         }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun scrollWithScrollbar_scrollContentAndIndicatorMoves50Percent_test() =
         runComposeUiTest {
@@ -66,7 +65,6 @@ class ScrollbarModifierTest {
                 )
             }
 
-            // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
             val node = onNodeWithTag("scrollbar")
 
             node.assertExists()
@@ -78,11 +76,9 @@ class ScrollbarModifierTest {
             val actualIndicatorOffset = indicatorBounds.topLeft.x - barBounds.topLeft.x
             val expectedIndicatorOffset = maxIndicatorOffset * fractionOffsetToMove
 
-            println("Expected: $expectedIndicatorOffset, Actual: $actualIndicatorOffset")
-            assertTrue { expectedIndicatorOffset.roundToInt() == actualIndicatorOffset.roundToInt() }
+            assertThat(expectedIndicatorOffset).isEqualTo(actualIndicatorOffset)
         }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun scrollWithScrollbar_dragIndicatorAndContentMoves50Percent_test() =
         runComposeUiTest {
@@ -107,7 +103,6 @@ class ScrollbarModifierTest {
                 )
             }
 
-            // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
             val node = onNodeWithTag("scrollbar")
 
             node.assertExists()
@@ -119,8 +114,7 @@ class ScrollbarModifierTest {
             val expectedIndicatorOffset = maxIndicatorOffset * fractionOffsetToMove
             val actualIndicatorOffset = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IndicatorOffset]
 
-            println("Expected: $expectedIndicatorOffset, Actual: $actualIndicatorOffset")
-            assertTrue { expectedIndicatorOffset.roundToInt() == actualIndicatorOffset.roundToInt() }
+            assertThat(expectedIndicatorOffset).isEqualTo(actualIndicatorOffset)
         }
 
     @OptIn(ExperimentalTestApi::class)
@@ -141,7 +135,6 @@ class ScrollbarModifierTest {
                 )
             }
 
-            // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
             val node = onNodeWithTag("scrollbar")
 
             node.assertExists()
@@ -152,11 +145,9 @@ class ScrollbarModifierTest {
 
             val expectedIndicatorWidth = barBounds.width * fraction
 
-            println("Expected: $expectedIndicatorWidth, Actual: ${indicatorBounds.width}")
-            assertTrue { expectedIndicatorWidth.roundToInt() == indicatorBounds.width.roundToInt() }
+            assertThat(expectedIndicatorWidth).isEqualTo(indicatorBounds.width)
         }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun scrollWithScrollbar_indicatorPositionedCorrectlyOnDragForFixedSize_test() =
         runComposeUiTest {
@@ -188,7 +179,6 @@ class ScrollbarModifierTest {
                 )
             }
 
-            // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
             val node = onNodeWithTag("scrollbar")
 
             node.assertExists()
@@ -200,7 +190,6 @@ class ScrollbarModifierTest {
             val expectedIndicatorOffset = maxIndicatorOffset * fractionOffsetToMove
             val actualIndicatorOffset = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IndicatorOffset]
 
-            println("Expected: $expectedIndicatorOffset, Actual: $actualIndicatorOffset")
-            assertTrue { expectedIndicatorOffset.roundToInt() == actualIndicatorOffset.roundToInt() }
+            assertThat(expectedIndicatorOffset).isEqualTo(actualIndicatorOffset)
         }
 }
