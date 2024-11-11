@@ -202,21 +202,14 @@ fun CustomScrollbarExample() {
 }
 ```
 
-## Usage GIFs
+## Usage Images
+### Images from Sample App
 
-[Insert usage GIFs here to demonstrate the library's functionality in action]
+<div style="display: flex; gap: 28px;">
+    <img src="readme_images/Simulator%20Screenshot%20-%20iPhone%2016%20-%202024-11-11%20at%2002.30.28.png" alt="Simulator Screenshot" width="250" height="auto">
+    <img src="readme_images/Simulator%20Screenshot%20-%20iPhone%2016%20-%202024-11-11%20at%2002.32.00.png" alt="Simulator Screenshot" width="250" height="auto">
+</div>
 
-### Horizontal Scroll GIF
-
-[Insert horizontal scroll GIF]
-
-### Vertical Scroll GIF
-
-[Insert vertical scroll GIF]
-
-### Customized Scrollbar GIF
-
-[Insert customized scrollbar GIF]
 
 ## Troubleshooting
 
@@ -230,7 +223,3 @@ If you encounter any issues with the scrollbar not appearing or behaving as expe
 ## Contributing
 
 Contributions to the project are welcome! Please feel free to submit pull requests or open issues on our GitHub repository.
-
-## License
-
-[Insert license text here]
