@@ -13,7 +13,6 @@ A Compose multiplatform library for adding customizable scrollbars to scrollable
 5. [Advanced Usage](#advanced-usage)
 7. [Troubleshooting](#troubleshooting)
 8. [Contributing](#contributing)
-9. [License](#license)
 
 ## Features
 
