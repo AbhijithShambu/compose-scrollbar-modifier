@@ -13,10 +13,9 @@ object ScrollbarSemanticProperties {
         const val SHOW_ALWAYS: String = "showAlways"
         const val IS_DRAG_ENABLED: String = "isDragEnabled"
         const val IS_DRAGGING: String = "isDragging"
-        const val STATE: String = "state"
+        const val IS_VISIBLE: String = "isVisible"
     }
 
-    val State = SemanticsPropertyKey<ScrollbarState>(Keys.STATE)
     val BarBounds = SemanticsPropertyKey<Rect>(Keys.BAR_BOUNDS)
     val IndicatorBounds = SemanticsPropertyKey<Rect>(Keys.INDICATOR_BOUNDS)
     val IndicatorOffset = SemanticsPropertyKey<Float>(Keys.INDICATOR_OFFSET)
@@ -24,4 +23,5 @@ object ScrollbarSemanticProperties {
     val IsDragEnabled = SemanticsPropertyKey<Boolean>(Keys.IS_DRAG_ENABLED)
     val ShowAlways = SemanticsPropertyKey<Boolean>(Keys.SHOW_ALWAYS)
     val IsDragging = SemanticsPropertyKey<Boolean>(Keys.IS_DRAGGING)
+    val IsVisible = SemanticsPropertyKey<Boolean>(Keys.IS_VISIBLE)
 }

@@ -73,7 +73,7 @@ class ScrollbarState internal constructor() {
         val barAndIndicatorLengthDiff = barLength - indicatorLength
 
         return if (barAndIndicatorLengthDiff > 0) {
-            indicatorOffset * (contentLength - viewPortLength) / (barLength - indicatorLength)
+            indicatorOffset * (contentLength - viewPortLength) / barAndIndicatorLengthDiff
         } else {
             0f
         }
@@ -88,6 +88,7 @@ class ScrollbarState internal constructor() {
             "indicatorLength=$indicatorLength, " +
             "barLength=$barLength, " +
             "contentLength=$contentLength, " +
+            "viewPortLength=$viewPortLength, " +
             "dragBounds=$dragBounds" +
             ")"
 }

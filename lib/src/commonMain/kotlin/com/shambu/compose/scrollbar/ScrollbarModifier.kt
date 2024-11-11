@@ -24,7 +24,6 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.ObserverModifierNode
 import androidx.compose.ui.node.SemanticsModifierNode
 import androidx.compose.ui.node.observeReads
-import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.testTag
@@ -415,23 +414,18 @@ private class ScrollbarModifierNode(
     }
 
     override fun SemanticsPropertyReceiver.applySemantics() {
+        val isVisible = showAlways ||
+            scrollState.isScrollInProgress ||
+            scrollbarState.isScrollbarDragActive
+
         testTag = "scrollbar"
-        debugInspectorInfo {
-            properties[ScrollbarSemanticProperties.Keys.BAR_BOUNDS] = scrollbarState.barBounds
-            properties[ScrollbarSemanticProperties.Keys.INDICATOR_BOUNDS] = scrollbarState.indicatorBounds
-            properties[ScrollbarSemanticProperties.Keys.INDICATOR_OFFSET] = scrollbarState.indicatorOffset
-            properties[ScrollbarSemanticProperties.Keys.DIRECTION] = direction
-            properties[ScrollbarSemanticProperties.Keys.SHOW_ALWAYS] = showAlways
-            properties[ScrollbarSemanticProperties.Keys.IS_DRAGGING] = scrollbarState.isScrollbarDragActive
-            properties[ScrollbarSemanticProperties.Keys.STATE] = scrollbarState
-        }
-        set(ScrollbarSemanticProperties.State, scrollbarState)
         set(ScrollbarSemanticProperties.BarBounds, scrollbarState.barBounds)
         set(ScrollbarSemanticProperties.IndicatorBounds, scrollbarState.indicatorBounds)
         set(ScrollbarSemanticProperties.IndicatorOffset, scrollbarState.indicatorOffset)
         set(ScrollbarSemanticProperties.Direction, direction)
         set(ScrollbarSemanticProperties.ShowAlways, showAlways)
         set(ScrollbarSemanticProperties.IsDragging, scrollbarState.isScrollbarDragActive)
+        set(ScrollbarSemanticProperties.IsVisible, isVisible)
     }
 }
 
@@ -461,6 +455,7 @@ class DefaultScrollbarLayoutScope(
     }
 }
 
+@Suppress("unused")
 private fun Modifier.scrollbarOld(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
@@ -479,7 +474,9 @@ private fun Modifier.scrollbarOld(
         properties[ScrollbarSemanticProperties.Keys.DIRECTION] = direction
         properties[ScrollbarSemanticProperties.Keys.SHOW_ALWAYS] = showAlways
         properties[ScrollbarSemanticProperties.Keys.IS_DRAGGING] = scrollbarState.isScrollbarDragActive
-        properties[ScrollbarSemanticProperties.Keys.STATE] = scrollbarState
+        properties[ScrollbarSemanticProperties.Keys.IS_VISIBLE] = showAlways ||
+            scrollState.isScrollInProgress ||
+            scrollbarState.isScrollbarDragActive
     }) {
         val isScrollingOrPanning =
             scrollState.isScrollInProgress || scrollbarState.isScrollbarDragActive
