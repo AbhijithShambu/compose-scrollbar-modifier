@@ -24,4 +24,5 @@ object ScrollbarSemanticProperties {
     val ShowAlways = SemanticsPropertyKey<Boolean>(Keys.SHOW_ALWAYS)
     val IsDragging = SemanticsPropertyKey<Boolean>(Keys.IS_DRAGGING)
     val IsVisible = SemanticsPropertyKey<Boolean>(Keys.IS_VISIBLE)
+    val State = SemanticsPropertyKey<ScrollbarState>("state")
 }
