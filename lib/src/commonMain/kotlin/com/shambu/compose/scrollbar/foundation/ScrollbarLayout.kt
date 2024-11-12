@@ -84,7 +84,8 @@ class ScrollbarLayout(
             maximumIndicatorLength,
         )
 
-    private fun calculateStandardIndicatorLength(scrollbarLength: Float): Float = (scrollbarLength / contentLength) * viewPortLength
+    private fun calculateStandardIndicatorLength(scrollbarLength: Float): Float =
+        min((scrollbarLength / contentLength) * viewPortLength, scrollbarLength)
 
     /**
      * Calculates the offset position of the scrollbar indicator (thumb) within the scrollbar track.
@@ -97,5 +98,8 @@ class ScrollbarLayout(
     fun calculateIndicatorOffset(
         scrollbarLength: Float,
         indicatorLength: Float,
-    ): Float = contentOffset * (scrollbarLength - indicatorLength) / (contentLength - viewPortLength)
+    ): Float {
+        if (contentLength <= viewPortLength) return 0f
+        return contentOffset * (scrollbarLength - indicatorLength) / (contentLength - viewPortLength)
+    }
 }
