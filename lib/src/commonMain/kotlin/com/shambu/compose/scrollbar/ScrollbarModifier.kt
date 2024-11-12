@@ -237,6 +237,7 @@ fun DrawScope.drawDefaultScrollbar(
  * @param autoHideAnimationSpec Animation for auto-hiding the scrollbar. Default auto-hide animation if not specified.
  * @param isDragEnabled If true, the scrollbar is draggable. Default is true.
  * @param onMeasureAndDraw To measure and draw the scrollbar.
+ * Provides [ScrollbarLayoutScope] with [ScrollbarLayout] info to submit measurements and draw the scrollbar.
  *
  * @return A modifier that adds a scrollbar to the composable.
  *

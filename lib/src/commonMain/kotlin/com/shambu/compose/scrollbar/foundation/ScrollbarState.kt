@@ -25,7 +25,7 @@ import kotlin.math.roundToInt
  * @property contentLength The total length of the scrollable content.
  * @property viewPortLength The length of the viewport (visible area) of the scrollable container.
  * Used alongside `contentLength` to adjust the scrollbar indicator's size and position.
- * * @property dragBounds The bounds for detecting dragging interactions with the scrollbar.
+ * @property dragBounds The bounds for detecting dragging interactions with the scrollbar.
  *
  * Instance can be created using [rememberScrollbarState]
  * @See rememberScrollbarState
