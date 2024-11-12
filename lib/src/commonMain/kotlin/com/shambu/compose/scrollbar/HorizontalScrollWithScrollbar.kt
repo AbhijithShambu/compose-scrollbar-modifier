@@ -13,6 +13,7 @@ import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
 import com.shambu.compose.scrollbar.foundation.ScrollbarMeasureAndDraw
 import com.shambu.compose.scrollbar.foundation.ScrollbarMeasurements
 import com.shambu.compose.scrollbar.foundation.ScrollbarState
+import com.shambu.compose.scrollbar.foundation.rememberScrollbarState
 
 /**
  * Modify element to allow to scroll horizontally when width of the content is bigger than max

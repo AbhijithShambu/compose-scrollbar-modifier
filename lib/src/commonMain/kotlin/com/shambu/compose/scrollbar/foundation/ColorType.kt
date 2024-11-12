@@ -25,7 +25,22 @@ sealed interface ColorType {
      *
      * @property brush A function that returns a [Brush] for the gradient, given the bounds defined by a [Rect].
      */
-    data class Gradient(
-        val brush: (bounds: Rect) -> Brush,
-    ) : ColorType
+    class Gradient(
+        brush: (bounds: Rect) -> Brush,
+    ) : ColorType {
+        val brush: (bounds: Rect) -> Brush = { bounds ->
+            // To prevent crashes due to infinite bounds
+            if (bounds.isFinite) {
+                brush(bounds)
+            } else {
+                println("Could not load brush due to invalid bounds: $bounds")
+                Brush.horizontalGradient(
+                    0f to Color.Transparent,
+                    0f to Color.Transparent,
+                    startX = 0f,
+                    endX = 1f,
+                )
+            }
+        }
+    }
 }

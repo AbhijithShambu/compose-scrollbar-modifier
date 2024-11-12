@@ -446,7 +446,9 @@ class DefaultScrollbarLayoutScope(
                 measurements.indicatorBounds.topLeft.x - measurements.barBounds.topLeft.x
             }
 
-        drawScrollbarAndIndicator(drawScope)
+        if (scrollbarState.contentLength > scrollbarState.viewPortLength) {
+            drawScrollbarAndIndicator(drawScope)
+        }
 
         return ScrollbarMeasurementResult()
     }
