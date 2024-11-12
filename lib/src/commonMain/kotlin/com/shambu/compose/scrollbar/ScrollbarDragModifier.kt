@@ -55,6 +55,8 @@ internal fun Modifier.scrollbarDrag(
 
                     if (down.isConsumed) {
                         coroutineScope.launch { scrollState.stopScroll() }
+                    } else {
+                        down.consume()
                     }
 
                     // Handle the drag (pan) and track movements

@@ -19,6 +19,7 @@ import com.shambu.compose.scrollbar.foundation.ScrollbarState
 // Only for Debugging
 private const val IS_DEBUG_MODE = false
 
+@Suppress("unused")
 internal fun Modifier.scrollbarDebugger(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,
