@@ -410,9 +410,12 @@ private class ScrollbarModifierNode(
     }
 
     override fun SemanticsPropertyReceiver.applySemantics() {
-        val isVisible = showAlways ||
-            scrollState.isScrollInProgress ||
-            scrollbarState.isScrollbarDragActive
+        val isVisible = (
+            showAlways ||
+                scrollState.isScrollInProgress ||
+                scrollbarState.isScrollbarDragActive
+        ) &&
+            scrollbarState.contentLength > scrollbarState.viewPortLength
 
         testTag = "scrollbar"
         set(ScrollbarSemanticProperties.BarBounds, scrollbarState.barBounds)

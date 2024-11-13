@@ -9,10 +9,13 @@ A Compose multiplatform library for adding customizable scrollbars to scrollable
 3. [Basic Usage](#basic-usage)
    - [Horizontal Scrollbar](#horizontal-scrollbar)
    - [Vertical Scrollbar](#vertical-scrollbar)
+   - [Scrollbar State](#scrollbar-state)
 4. [Customization Options](#customization-options)
 5. [Advanced Usage](#advanced-usage)
-7. [Troubleshooting](#troubleshooting)
-8. [Contributing](#contributing)
+6. [Usage Images](#usage-images)
+7. [API Reference](#api-reference)
+8. [Troubleshooting](#troubleshooting)
+9. [Contributing](#contributing)
 
 ## Features
 
@@ -69,6 +72,20 @@ fun VerticalScrollExample() {
     }
 }
 ```
+
+### Scrollbar State
+The ScrollbarState class manages the properties and behavior of the scrollbar, such as the indicator position, drag status, and measurements.
+You can create an instance using:
+```kotlin
+val scrollbarState = rememberScrollbarState()
+```
+
+### Properties
+- `indicatorOffset`: State that tracks the offset position of the scrollbar’s indicator. This offset represents the indicator’s current location along the scrollbar, updating as content is scrolled or when the user drags the scrollbar. The value is relative to scrollbar bounds
+- `isScrollbarDragActive`: State indicating whether the scrollbar is actively being dragged. This can be used to visually highlight or change the appearance of the scrollbar when a user is interacting with it.
+- `dragTo(indicatorOffset: Float)`: Float: Drags the scrollbar’s indicator to a specific offset position. This function allows direct positioning of the scrollbar indicator, typically updating the scroll position based on this offset. The offset passed should be relative to scrollbar bounds
+- `dragBy(indicatorOffset: Float)`: Float: Moves the indicator by a specified offset. Instead of setting a new position, this function shifts the indicator by a relative amount, useful for incremental scrolling.
+
 ## Customization Options
 
 The `ScrollbarConfig` class provides various options to customize the scrollbar appearance and behavior:
@@ -148,7 +165,6 @@ fun CustomizedScrollbarExample() {
 
 These customization options allow you to fine-tune the appearance and behavior of your scrollbars to match your app's design and requirements.
 
-
 ## Advanced Usage
 To custom draw scrollbar, 
 
@@ -202,22 +218,24 @@ fun CustomScrollbarExample() {
 ```
 
 ## Usage Images
-### Images from Sample App
+### Example Images from Sample App
 
-<div style="display: flex; gap: 28px;">
+<div style="display: flex; gap: 36px;">
     <img src="readme_images/Simulator%20Screenshot%20-%20iPhone%2016%20-%202024-11-11%20at%2002.30.28.png" alt="Simulator Screenshot" width="250" height="auto">
     <img src="readme_images/Simulator%20Screenshot%20-%20iPhone%2016%20-%202024-11-11%20at%2002.32.00.png" alt="Simulator Screenshot" width="250" height="auto">
 </div>
+
+## API Reference
+For a complete list of available functions, properties, and detailed usage, see the [API Reference](https://abhijithshambu.github.io/compose-scrollbar-modifier/lib/index.html).
 
 
 ## Troubleshooting
 
 If you encounter any issues with the scrollbar not appearing or behaving as expected:
 
-1. Ensure that you've properly initialized both `scrollState` and `scrollbarState`.
+1. If you encounter issues with dragging ensure that no overriding pointer event based modifiers are used. If you are using low level .scrollbar() modifier instead of verticalScrollWithScrollbar or horizontalScrollWithScrollbar then make sure scrolling is enabled conditionally if isScrollbarDragActive is false.
 2. Check that the content inside the scrollable container has sufficient size to trigger scrolling.
 3. Verify that there are no conflicting modifiers affecting the scrollability of the content.
-4. Make sure the `ScrollbarConfig` is properly applied if you're using custom settings.
 
 ## Contributing
 

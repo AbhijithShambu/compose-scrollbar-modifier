@@ -6,10 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import kotlinx.coroutines.CoroutineScope
 import kotlin.math.roundToInt
 
 /**
@@ -31,7 +33,9 @@ import kotlin.math.roundToInt
  * @See rememberScrollbarState
  */
 @Stable
-class ScrollbarState internal constructor() {
+class ScrollbarState internal constructor(
+    internal var coroutineScope: CoroutineScope,
+) {
     /**
      * indicatorOffset A mutable state representing the offset of the scrollbar's indicator (thumb).
      * The offset indicates the current position of the thumb along the scrollbar.
@@ -154,4 +158,10 @@ class ScrollbarState internal constructor() {
  * @return An instance of [ScrollbarState] with remembered state.
  */
 @Composable
-fun rememberScrollbarState(): ScrollbarState = remember { ScrollbarState() }
+fun rememberScrollbarState(): ScrollbarState {
+    val coroutineScope = rememberCoroutineScope()
+
+    return remember {
+        ScrollbarState(coroutineScope)
+    }
+}
