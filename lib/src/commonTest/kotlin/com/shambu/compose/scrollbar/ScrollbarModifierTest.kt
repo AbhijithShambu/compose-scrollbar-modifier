@@ -58,6 +58,32 @@ class ScrollbarModifierTest {
         }
 
     @Test
+    fun scrollWithScrollbar_contentIsSmallerThanViewport_test() =
+        runComposeUiTest {
+            setContent {
+                Box(
+                    Modifier
+                        .size(200.dp)
+                        .verticalScrollWithScrollbar(
+                            rememberScrollState(),
+                            rememberScrollbarState(),
+                        ).size(width = 200.dp, height = 100.dp),
+                )
+            }
+
+            val node = onNodeWithTag("scrollbar")
+            node.assertExists()
+            val indicatorOffset = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IndicatorOffset]
+            val indicatorBounds = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IndicatorBounds]
+            val barBounds = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.BarBounds]
+            val isVisible = node.fetchSemanticsNode().config[ScrollbarSemanticProperties.IsVisible]
+
+            assertThat(indicatorOffset).isZero()
+            assertThat(indicatorBounds.height).isEqualTo(barBounds.height)
+            assertThat(isVisible).isEqualTo(false)
+        }
+
+    @Test
     fun scrollWithScrollbar_horizontalScrollContentAndIndicatorMoves50Percent_test() =
         runComposeUiTest {
             val containerWidth = 200.dp

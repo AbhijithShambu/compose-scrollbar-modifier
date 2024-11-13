@@ -5,9 +5,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.stopScroll
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import com.shambu.compose.scrollbar.foundation.ScrollbarState
@@ -38,9 +36,7 @@ internal fun Modifier.scrollbarDrag(
     direction: Orientation,
     isDragEnabled: Boolean = true,
 ): Modifier =
-    composed {
-        val coroutineScope = rememberCoroutineScope()
-
+    this then
         pointerInput(isDragEnabled) {
             if (isDragEnabled) {
                 awaitEachGesture {
@@ -54,9 +50,7 @@ internal fun Modifier.scrollbarDrag(
                     if (!scrollbarState.isScrollbarDragActive) return@awaitEachGesture
 
                     if (down.isConsumed) {
-                        coroutineScope.launch { scrollState.stopScroll() }
-                    } else {
-                        down.consume()
+                        scrollbarState.coroutineScope.launch { scrollState.stopScroll() }
                     }
 
                     // Handle the drag (pan) and track movements
@@ -74,10 +68,13 @@ internal fun Modifier.scrollbarDrag(
                         suspend {
                             // Scroll to initial position
                             scrollbarState.dragTo(initialBarOffset)
+                            if (!down.isConsumed) {
+                                down.consume()
+                            }
                         }
 
                     if (shouldScrollToInitialPosition) {
-                        coroutineScope.launch {
+                        scrollbarState.coroutineScope.launch {
                             if (down.isConsumed) {
                                 delay(10)
                             }
@@ -93,14 +90,14 @@ internal fun Modifier.scrollbarDrag(
                         // Fallback
                         if (jumpToInitialPosition) {
                             jumpToInitialPosition = false
-                            coroutineScope.launch { scrollToInitialPosition() }
+                            scrollbarState.coroutineScope.launch { scrollToInitialPosition() }
                         }
 
                         val panChange = event.changes.firstOrNull()?.positionChange()
 
                         if (panChange != null) {
                             val updatedBarOffset = if (isVertical) panChange.y else panChange.x
-                            coroutineScope.launch {
+                            scrollbarState.coroutineScope.launch {
                                 // Panning
                                 scrollbarState.dragBy(updatedBarOffset)
                             }
@@ -113,4 +110,3 @@ internal fun Modifier.scrollbarDrag(
                 }
             }
         }
-    }
