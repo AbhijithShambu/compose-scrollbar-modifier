@@ -62,10 +62,7 @@ android {
 
     defaultConfig {
         applicationId = "org.shambu.compose.scrollbar.sample"
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
+        minSdk = 28
         targetSdk =
             libs.versions.android.targetSdk
                 .get()
