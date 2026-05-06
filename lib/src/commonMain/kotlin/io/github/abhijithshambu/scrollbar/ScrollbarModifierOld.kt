@@ -18,6 +18,10 @@ import io.github.abhijithshambu.scrollbar.foundation.ScrollbarState
 import kotlin.math.max
 
 @Suppress("unused")
+@Deprecated(
+    message = "scrollbarOld uses the deprecated Modifier.composed API and has been superseded by the ModifierNode-based scrollbar implementation.",
+    level = DeprecationLevel.WARNING,
+)
 private fun Modifier.scrollbarOld(
     scrollState: ScrollState,
     scrollbarState: ScrollbarState,

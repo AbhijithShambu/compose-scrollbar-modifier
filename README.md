@@ -62,7 +62,7 @@ fun HorizontalScrollExample() {
 
 ### Vertical Scrollbar
 
-Similarly, to add horizontal scrolling with a scrollbar, use the `horizontalScrollWithScrollbar` function:
+Similarly, to add vertical scrolling with a scrollbar, use the `verticalScrollWithScrollbar` function:
 
 ```kotlin
 @Composable

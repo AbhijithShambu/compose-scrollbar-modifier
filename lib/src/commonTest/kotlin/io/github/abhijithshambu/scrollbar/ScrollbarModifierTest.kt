@@ -33,7 +33,6 @@ import io.github.abhijithshambu.scrollbar.foundation.ScrollbarConfig
 import io.github.abhijithshambu.scrollbar.foundation.ScrollbarMeasurements
 import io.github.abhijithshambu.scrollbar.foundation.ScrollbarSemanticProperties
 import io.github.abhijithshambu.scrollbar.foundation.rememberScrollbarState
-import getPlatformName
 import kotlinx.coroutines.delay
 import kotlin.test.Test
 
@@ -410,7 +409,6 @@ class ScrollbarModifierTest {
             val containerWidth = 200.dp
             val contentSize = 1000.dp
             val indicatorLength = with(density) { 24.dp.toPx() }
-            println("Platform: ${getPlatformName()}")
             setContent {
                 val scrollState = rememberScrollState(0)
                 val scrollbarState = rememberScrollbarState()

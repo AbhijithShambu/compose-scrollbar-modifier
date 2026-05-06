@@ -5,7 +5,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 
 object ScrollbarSemanticProperties {
-    object Keys {
+    internal object Keys {
         const val BAR_BOUNDS: String = "barBounds"
         const val INDICATOR_BOUNDS: String = "indicatorBounds"
         const val INDICATOR_OFFSET: String = "indicatorOffset"

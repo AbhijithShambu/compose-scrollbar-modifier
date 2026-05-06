@@ -17,6 +17,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
+/**
+ * Applies [PaddingValues] insets to this [Rect], shrinking it from each edge by the
+ * corresponding padding amount resolved for the given [layoutDirection].
+ */
 fun Rect.applyPadding(
     density: Density,
     paddingValues: PaddingValues,
@@ -32,6 +36,7 @@ fun Rect.applyPadding(
         )
     }
 
+/** Returns `true` if this [ColorType] is a [ColorType.Solid] with a fully transparent color (alpha == 0). */
 val ColorType.isTransparent get() = this is ColorType.Solid && color.alpha == 0f
 
 internal fun BorderStyle.toStroke(density: Density) =

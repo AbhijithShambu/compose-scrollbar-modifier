@@ -485,7 +485,7 @@ private class ScrollbarModifierNode(
     }
 }
 
-class DefaultScrollbarLayoutScope(
+internal class DefaultScrollbarLayoutScope(
     private val drawScope: DrawScope,
     private val scrollbarState: ScrollbarState,
     override val density: Float,

@@ -1,7 +1,7 @@
 [versions]
 agp = "8.5.2"
 android-compileSdk = "34"
-android-minSdk = "28"
+android-minSdk = "24"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
@@ -19,7 +19,8 @@ junit = "4.13.2"
 kotlin = "2.0.21"
 dokka = "1.9.20"
 ktlint-gradle = "12.1.1"
-maven-publish = "0.25.3"
+maven-publish = "0.30.0"
+library-version = "1.0.0"
 annotationJvm = "1.9.1"
 
 [libraries]
