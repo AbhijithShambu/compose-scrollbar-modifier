@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - sample
+      - 'sample/**'
 
 concurrency:
   group: publish-wiki
@@ -24,13 +24,13 @@ jobs:
           submodules: 'recursive'
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Generate Wiki
         run: ./gradlew dokkaHtmlMultiModule
