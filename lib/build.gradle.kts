@@ -58,7 +58,7 @@ android {
     compileSdk = libs.versions.android.compileSdk
         .get()
         .toInt()
-    namespace = "com.shambu.compose.scrollbar"
+    namespace = "io.github.abhijithshambu.scrollbar"
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk
@@ -83,7 +83,7 @@ mavenPublishing {
     // or when publishing to https://s01.oss.sonatype.org
     publishToMavenCentral(SonatypeHost.S01, automaticRelease = false)
     signAllPublications()
-    coordinates("com.shambu.compose", "compose-scrollbar-modifier", "1.0.0")
+    coordinates("io.github.abhijithshambu", "compose-scrollbar-modifier", "1.0.0")
 
     pom {
         name.set(project.name)

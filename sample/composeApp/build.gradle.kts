@@ -58,7 +58,7 @@ android {
         libs.versions.android.compileSdk
             .get()
             .toInt()
-    namespace = "com.shambu.compose.scrollbar.sample"
+    namespace = "io.github.abhijithshambu.scrollbar.sample"
 
     defaultConfig {
         applicationId = "org.shambu.compose.scrollbar.sample"

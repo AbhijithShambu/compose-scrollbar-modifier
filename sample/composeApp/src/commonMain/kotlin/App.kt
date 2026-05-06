@@ -1,17 +1,21 @@
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -25,17 +29,18 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shambu.compose.scrollbar.foundation.ColorType
-import com.shambu.compose.scrollbar.foundation.ScrollbarConfig
-import com.shambu.compose.scrollbar.foundation.ScrollbarState
-import com.shambu.compose.scrollbar.foundation.rememberScrollbarState
-import com.shambu.compose.scrollbar.horizontalScrollWithScrollbar
-import com.shambu.compose.scrollbar.sample.data.AlbumModel
-import com.shambu.compose.scrollbar.sample.data.SongModel
-import com.shambu.compose.scrollbar.sample.theme.AppTheme
-import com.shambu.compose.scrollbar.sample.ui.components.AlbumCover
-import com.shambu.compose.scrollbar.sample.ui.components.SongItem
-import com.shambu.compose.scrollbar.verticalScrollWithScrollbar
+import io.github.abhijithshambu.scrollbar.foundation.ColorType
+import io.github.abhijithshambu.scrollbar.foundation.ScrollbarConfig
+import io.github.abhijithshambu.scrollbar.foundation.ScrollbarState
+import io.github.abhijithshambu.scrollbar.foundation.rememberScrollbarState
+import io.github.abhijithshambu.scrollbar.horizontalScrollWithScrollbar
+import io.github.abhijithshambu.scrollbar.sample.data.AlbumModel
+import io.github.abhijithshambu.scrollbar.sample.data.SongModel
+import io.github.abhijithshambu.scrollbar.sample.theme.AppTheme
+import io.github.abhijithshambu.scrollbar.sample.ui.components.AlbumCover
+import io.github.abhijithshambu.scrollbar.sample.ui.components.SongItem
+import io.github.abhijithshambu.scrollbar.scrollbar
+import io.github.abhijithshambu.scrollbar.verticalScrollWithScrollbar
 
 const val DARK_THEME = false
 val indicatorColor = Color(0xffB33951)
@@ -48,7 +53,7 @@ fun App() {
             Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
-                .padding(WindowInsets.systemBars.asPaddingValues())
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .verticalScrollWithScrollbar(
                     rememberScrollState(),
                     rememberScrollbarState(),
@@ -102,6 +107,7 @@ fun App() {
                 Spacer(Modifier.height(8.dp))
             }
 
+            AlbumsCarousalLazy()
             AlbumsCarousal()
             Spacer(Modifier.height(24.dp))
 
@@ -141,6 +147,53 @@ private fun AlbumsCarousal() {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         sampleAlbums.forEach { poster ->
+            AlbumCover(
+                poster,
+                width = 260.dp,
+                modifier = Modifier.shadow(6.dp, RoundedCornerShape(20.dp)),
+            )
+        }
+    }
+}
+
+@Composable
+private fun AlbumsCarousalLazy() {
+    val scrollState = rememberLazyListState()
+    val scrollbarState = rememberScrollbarState()
+    LazyRow(
+        state = scrollState,
+        userScrollEnabled = !scrollbarState.isScrollbarDragActive,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(if (DARK_THEME) 0xFF0C051B else 0xFF7B506F))
+            .padding(vertical = 16.dp)
+            .scrollbar(
+                scrollState = scrollState,
+                scrollbarState = scrollbarState,
+                direction = Orientation.Horizontal,
+                config =
+                    ScrollbarConfig(
+                        indicatorThickness = 24.dp,
+                        barThickness = 24.dp,
+                        padding = PaddingValues(horizontal = 80.dp),
+                        indicatorPadding = PaddingValues(4.dp),
+                        indicatorColor = ColorType.Gradient { indicatorBounds ->
+                            Brush.linearGradient(
+                                0f to indicatorColor,
+                                0.55f to Color(0xFFFFFF),
+                                1f to indicatorColor,
+                                start = indicatorBounds.topLeft,
+                                end = indicatorBounds.bottomRight,
+                            )
+                        },
+                        barColor = ColorType.Solid(barColor),
+                        showAlways = true,
+                    ),
+            ).padding(horizontal = 24.dp)
+            .padding(top = 8.dp, bottom = 36.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        items(sampleAlbums, key = { it.title }) { poster ->
             AlbumCover(
                 poster,
                 width = 260.dp,
