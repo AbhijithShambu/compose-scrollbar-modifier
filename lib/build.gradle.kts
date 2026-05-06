@@ -58,7 +58,7 @@ android {
     compileSdk = libs.versions.android.compileSdk
         .get()
         .toInt()
-    namespace = "com.shambu.compose.scrollbar"
+    namespace = "io.github.abhijithshambu.scrollbar"
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk
@@ -81,13 +81,17 @@ dependencies {
 mavenPublishing {
 //    publishToMavenCentral(SonatypeHost.DEFAULT)
     // or when publishing to https://s01.oss.sonatype.org
-    publishToMavenCentral(SonatypeHost.S01, automaticRelease = false)
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
-    coordinates("com.shambu.compose", "compose-scrollbar-modifier", "1.0.0")
+    coordinates(
+        "io.github.abhijithshambu",
+        "compose-scrollbar-modifier",
+        System.getenv("LIBRARY_VERSION") ?: libs.versions.library.version.get(),
+    )
 
     pom {
         name.set(project.name)
-        description.set("Compose multiplatform library for displaying Scrollbar using modifer.")
+        description.set("Compose multiplatform library for displaying a scrollbar using a modifier.")
         inceptionYear.set("2024")
         url.set("https://github.com/AbhijithShambu/compose-scrollbar-modifier")
         licenses {

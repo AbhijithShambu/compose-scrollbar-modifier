@@ -30,7 +30,13 @@ A Compose multiplatform library for adding customizable scrollbars to scrollable
 To use the Compose Scrollbar Modifier library in your project, add the following dependency to your `build.gradle` file:
 
 ```gradle
-// To be published soon ;)
+implementation("io.github.abhijithshambu:compose-scrollbar-modifier:1.0.0")
+```
+
+Or using Kotlin DSL:
+
+```kotlin
+implementation("io.github.abhijithshambu:compose-scrollbar-modifier:1.0.0")
 ```
 
 ## Basic Usage
@@ -56,7 +62,7 @@ fun HorizontalScrollExample() {
 
 ### Vertical Scrollbar
 
-Similarly, to add horizontal scrolling with a scrollbar, use the `horizontalScrollWithScrollbar` function:
+Similarly, to add vertical scrolling with a scrollbar, use the `verticalScrollWithScrollbar` function:
 
 ```kotlin
 @Composable
